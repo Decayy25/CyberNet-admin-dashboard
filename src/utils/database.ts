@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { DATABASE_URL } from "./envronment";
+import { DATABASE_URL } from "./environment";
 
 const client = new MongoClient(DATABASE_URL, {
   serverSelectionTimeoutMS: 10000,

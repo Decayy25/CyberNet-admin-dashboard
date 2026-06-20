@@ -65,7 +65,7 @@ const calculateSimilarity = (str1: string, str2: string): number => {
 const findSimilarArea = (
   input: string,
   areas: LocationDoc[],
-  threshold: number = 0.70
+  threshold: number = 0.7,
 ): LocationDoc | null => {
   const normalizedInput = cleanTextSpecial(input);
 
@@ -73,7 +73,8 @@ const findSimilarArea = (
   let bestScore = 0;
 
   areas.forEach((area) => {
-    const normalizedArea = area.area.toLowerCase().trim();
+    const normalizedArea = cleanTextSpecial(area.area);
+
     const similarity = calculateSimilarity(normalizedInput, normalizedArea);
 
     if (similarity > bestScore) {
@@ -81,7 +82,6 @@ const findSimilarArea = (
       bestMatch = area;
     }
   });
-
 
   if (bestScore >= threshold) {
     return bestMatch;

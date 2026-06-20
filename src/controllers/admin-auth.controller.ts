@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { AdminSchema } from "@/models/admin.models";
 import { admin } from "@/utils/database";
-import { JWT_SECRET } from "@/utils/envronment";
+import { JWT_SECRET } from "@/utils/environment";
 import { ResponseHandler } from "@/utils/response";
 import { TypeLoginAdmin } from "@/types";
 

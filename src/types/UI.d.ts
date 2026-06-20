@@ -13,30 +13,29 @@ export interface LocationArea {
   status: "tersedia" | "tidak tersedia" | string;
 }
 
-
 export interface TypeContactForm {
   fullName: string;
   phoneNumber: string;
   email: string;
   address: string;
   packageId: number;
-};
+}
 
 export interface TypeEmail {
   email: string;
   name: string;
   message: string;
-};
+}
 
 export interface TypeLoginAdmin {
   identifier: string;
   password: string;
-};
+}
 
 export interface typeLocation {
   area: string;
   status: "tersedia" | "tidak_tersedia";
-};
+}
 
 export interface typeMembership {
   paket: string;
@@ -44,4 +43,12 @@ export interface typeMembership {
   period: "bulan" | "tahun";
   features: [];
   isPopular?: boolean;
-};
+}
+
+export interface AlertProps {
+  area: string;
+  status: string;
+  confidence: string;
+  isVerified: boolean;
+  matchedArea?: string;
+}

@@ -1,6 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { JWT_SECRET } from "@/utils/envronment";
+import { JWT_SECRET } from "@/utils/environment";
 import AdminController from "@/controllers/admin-auth.controller";
 import { ILogin } from "@/types/Auth";
 

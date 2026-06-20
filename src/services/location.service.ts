@@ -8,7 +8,7 @@ const locationService = {
   async getLocations(): Promise<AxiosResponse> {
     try {
       const response = await axios.get(`${API_BASE}/location`);
-      return response;
+      return response.data;
     } catch (error) {
       console.error("Error fetching locations:", error);
       throw error;
@@ -73,12 +73,12 @@ const locationService = {
   },
 
 
-  async predictLocation(area: string): Promise<AxiosResponse> {
+  async predictLocation(area: string) {
     try {
       const response = await axios.post(`${API_BASE}/location/predict`, {
         area,
       });
-      return response;
+      return response.data;
     } catch (error) {
       console.error("Error predicting location:", error);
       throw error;
