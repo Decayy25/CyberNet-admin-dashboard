@@ -12,7 +12,7 @@ const Header = (): React.JSX.Element => {
   };
 
   return (
-    <header className="h-16 bg-[#111827]/50 backdrop-blur-md border-b top-0 border-gray-800 flex items-center justify-between px-8 z-10">
+    <header className="h-16 bg-[#111827] backdrop-blur-md border-b top-0 border-gray-800 flex items-center justify-between px-8 z-10">
       <div className="flex items-center gap-3 bg-[#1F2937]/60 border border-gray-800 px-4 py-2 rounded-xl w-80 focus-within:border-blue-500/50 transition-all duration-200">
         <Search size={16} className="text-gray-400" />
         <input

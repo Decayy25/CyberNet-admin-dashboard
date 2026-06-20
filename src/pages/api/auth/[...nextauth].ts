@@ -18,7 +18,6 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          // Gunakan controller untuk validasi login
           const payload: ILogin = {
             identifier: credentials.identifier,
             password: credentials.password,

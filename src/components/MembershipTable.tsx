@@ -86,7 +86,7 @@ const MembershipTable = ({
                     <td className="px-6 py-4">
                       {plan.isPopular ? (
                         <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-0.5 rounded-full text-xs font-medium">
-                          Popular Pack
+                          Popular
                         </span>
                       ) : (
                         <span className="text-gray-600 text-xs">-</span>

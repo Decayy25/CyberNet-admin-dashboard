@@ -9,6 +9,11 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+/environment.js
+./environment.js
+../environment.js
+/utils/environment.js
+./utils/environment.js
 
 # testing
 /coverage

@@ -18,7 +18,8 @@ export interface TypeContactForm {
   phoneNumber: string;
   email: string;
   address: string;
-  packageId: number;
+  message: string;
+  packageId: "PAKET 10 Mbps" | "PAKET 20 Mbps" | "PAKET 30 Mbps" | "PAKET 50 Mbps";
 }
 
 export interface TypeEmail {

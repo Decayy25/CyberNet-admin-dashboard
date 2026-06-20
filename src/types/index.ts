@@ -1,11 +1,3 @@
-export type TypeContactForm = {
-  fullName: string;
-  phoneNumber: string;
-  email: string;
-  address: string;
-  packageId: number;
-};
-
 export type TypeEmail = {
   email: string;
   name: string;
