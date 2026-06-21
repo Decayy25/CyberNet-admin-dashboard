@@ -34,6 +34,7 @@ export interface TypeLoginAdmin {
 }
 
 export interface typeLocation {
+  _id?: string;
   area: string;
   status: "tersedia" | "tidak_tersedia";
 }

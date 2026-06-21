@@ -52,7 +52,6 @@ export interface TypeContactForm {
   phoneNumber: string;
   email: string;
   address: string;
-  message: string;
   packageId: PackageType;
 }
 

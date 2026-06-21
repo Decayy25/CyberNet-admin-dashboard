@@ -6,16 +6,15 @@ import {
   isValidPackage,
   getPackageName,
 } from "@/types/package";
-import { EMAIL_USER, EMAIL_PASS } from "@/utils/environment";
+import { USER_EMAIL, USER_PASS } from "@/utils/environment";
+import ClientController from "@/controllers/admin-client.controller";
 
-const targetUser = EMAIL_USER || process.env.EMAIL_USER;
-const targetPass = EMAIL_PASS || process.env.EMAIL_PASS;
 
 export const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: targetUser || EMAIL_USER,
-    pass: targetPass || EMAIL_PASS,
+    user: USER_EMAIL,
+    pass: USER_PASS,
   },
 });
 
@@ -28,24 +27,22 @@ export const escapeHtml = (text: string = ""): string => {
     .replace(/'/g, "&#039;");
 };
 
-
 export const isValidEmail = (email: string): boolean => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
-
 
 export const isValidPhoneNumber = (phone: string): boolean => {
   return /^(\+62|0)[0-9]{9,12}$/.test(phone.replace(/\s/g, ""));
 };
 
-const sendEmail = async (body: TypeContactForm) => {
-  const { fullName, phoneNumber, email, address, packageId, message } = body;
 
+
+const sendEmail = async (body: TypeContactForm) => {
+  const { fullName, phoneNumber, email, address, packageId } = body;
 
   if (!fullName || !phoneNumber || !email || !address || !packageId) {
     throw new Error("Semuanya wajib di isi!");
   }
-
 
   if (!isValidEmail(email)) {
     throw new Error("Format email salah! Gunakan format: nama@domain.com");
@@ -61,14 +58,12 @@ const sendEmail = async (body: TypeContactForm) => {
     throw new Error("Paket yang dipilih tidak valid!");
   }
 
-
   const escape = {
     fullName: escapeHtml(fullName),
     phoneNumber: escapeHtml(phoneNumber),
     email: escapeHtml(email),
     address: escapeHtml(address),
     packageId: escapeHtml(packageId),
-    message: escapeHtml(message).replace(/\n/g, "<br>"),
   };
 
   try {
@@ -76,9 +71,9 @@ const sendEmail = async (body: TypeContactForm) => {
     const packageName = getPackageName(packageId as PackageType);
 
     const infoClient = await transporter.sendMail({
-      from: `"${escape.fullName}" <${targetUser}>`,
+      from: `"${escape.fullName}" <${USER_EMAIL}>`,
       replyTo: email,
-      to: targetUser,
+      to: USER_EMAIL,
       subject: `Pendaftaran ${packageName} dari ${escape.fullName}`,
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
@@ -122,9 +117,8 @@ const sendEmail = async (body: TypeContactForm) => {
       `,
     });
 
-
     await transporter.sendMail({
-      from: `CyberNet <${targetUser}>`,
+      from: `CyberNet <${USER_EMAIL}>`,
       to: email,
       subject: `Pendaftaran ${packageName} Diterima - CyberNet`,
       html: `
@@ -140,6 +134,12 @@ const sendEmail = async (body: TypeContactForm) => {
       `,
     });
 
+    // masukan ke database
+    const dbResponse = await ClientController.addClient(body)
+
+    if(!dbResponse.success) {
+      throw new Error("Gagal menyimpan riwayat pendaftaran ke database")
+    }
     return {
       success: true,
       result: infoClient,

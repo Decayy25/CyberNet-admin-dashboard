@@ -21,3 +21,20 @@ export type typeMembership = {
   features: [];
   isPopular?: boolean;
 };
+
+export interface TotalClientResponse {
+  success: boolean;
+  data: {
+    totalMembers: number;
+  };
+}
+
+export interface Client {
+  _id: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+  address: string;
+  packageId: string;
+  createdAt: string;
+}

@@ -23,4 +23,5 @@ const client = new MongoClient(DATABASE_URL, {
 export const db = client.db("cybernet");
 export const admin = db.collection("admin");
 export const region = db.collection("regions");
-export const membership = db.collection("membership")
+export const clientMember = db.collection("client");
+export const membership = db.collection("membership");

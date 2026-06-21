@@ -4,9 +4,6 @@ import { typeMembership } from "@/types";
 const API_BASE = "/api";
 
 const membershipService = {
-  /**
-   * Get all membership plans
-   */
   async getMembership(): Promise<AxiosResponse> {
     try {
       const response = await axios.get(`${API_BASE}/membership`);
@@ -17,9 +14,6 @@ const membershipService = {
     }
   },
 
-  /**
-   * Get membership by ID
-   */
   async getMembershipById(id: string): Promise<AxiosResponse> {
     try {
       const response = await axios.get(`${API_BASE}/membership/${id}`);
@@ -30,9 +24,6 @@ const membershipService = {
     }
   },
 
-  /**
-   * Add new membership plan
-   */
   async addMembership(payload: typeMembership): Promise<AxiosResponse> {
     try {
       const response = await axios.post(`${API_BASE}/membership`, payload);
@@ -43,9 +34,6 @@ const membershipService = {
     }
   },
 
-  /**
-   * Update membership plan
-   */
   async updateMembership(
     id: string,
     payload: typeMembership,
@@ -59,9 +47,6 @@ const membershipService = {
     }
   },
 
-  /**
-   * Delete membership plan
-   */
   async deleteMembership(id: string): Promise<AxiosResponse> {
     try {
       const response = await axios.delete(`${API_BASE}/membership/${id}`);

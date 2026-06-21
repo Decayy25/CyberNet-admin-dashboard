@@ -125,7 +125,6 @@ const LocationController = {
 
 
       if (currentDoc.area.toLowerCase() !== data.area.toLowerCase()) {
-        // Cek apakah area baru sudah ada di tempat lain
         const isExactDuplicate = await checkExactDuplicate(data.area);
         if (isExactDuplicate) {
           return ResponseHandler.validation([
