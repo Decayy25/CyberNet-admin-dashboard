@@ -37,25 +37,21 @@ const ClientController = {
     }
   },
 
-  async getTotalClient() {
-    try {
-      const result = await clientMember.countDocuments();
-
-      return ResponseHandler.success(result, "berhasil mengambil total client")
-    } catch {
-      return ResponseHandler.error("gagal mengambil total client")
-    }
-  },
-
   async addClient(body: TypeContactForm) {
     try {
       const data = await PackageClient.validate(body);
-      const result = await clientMember.insertOne(data);
+      const existing = await clientMember.findOne({
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phoneNumber
+      });
 
-      const existing = await clientMember.findOne(data);
+
       if (existing) {
         return ResponseHandler.validation(["Client dengan data ini sudah ada"]);
       }
+
+      const result = await clientMember.insertOne(data);
 
       return ResponseHandler.success(
         result.insertedId,
@@ -66,13 +62,16 @@ const ClientController = {
     }
   },
 
-  async updateClient(body: Client) {
-    const { _id } = body;
+  async updateClient(id: string, body: Client) {
     try {
+      if (!ObjectId.isValid(id)) {
+        return ResponseHandler.error("format ID tidak valid");
+      }
+
       const data = await PackageClient.validate(body);
 
       const result = await clientMember.updateOne(
-        { _id: new ObjectId(_id) },
+        { _id: new ObjectId(id) },
         {
           $set: {
             fullName: data.fullName,
@@ -97,23 +96,23 @@ const ClientController = {
 
   async removeById(_id: string) {
     try {
-       if (!ObjectId.isValid(_id)) {
-         return ResponseHandler.validation(["Format ID tidak valid"]);
-       }
+      if (!ObjectId.isValid(_id)) {
+        return ResponseHandler.validation(["Format ID tidak valid"]);
+      }
 
-       const result = await clientMember.findOneAndDelete({
-         _id: new ObjectId(_id),
-       });
+      const result = await clientMember.findOneAndDelete({
+        _id: new ObjectId(_id),
+      });
 
-       if (!result) {
-         return ResponseHandler.error("client tidak ditemukan");
-       }
+      if (!result) {
+        return ResponseHandler.error("client tidak ditemukan");
+      }
 
-       return ResponseHandler.success(result, "Sukses menghapus client");
+      return ResponseHandler.success(result, "Sukses menghapus client");
     } catch {
-        return ResponseHandler.error("Gagal menghapus client");
+      return ResponseHandler.error("Gagal menghapus client");
     }
-  }
+  },
 };
 
 export default ClientController;

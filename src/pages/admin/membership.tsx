@@ -4,8 +4,9 @@ import PageHead from "@/components/PageHead";
 import useMembership from "@/hooks/useMembership";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import Refresh from "@/components/refresh";
 
-export default function MembershipDashboard(): React.JSX.Element {
+const MembershipDashboard = (): React.JSX.Element => {
   const {
     membership,
     isLoading,
@@ -13,6 +14,7 @@ export default function MembershipDashboard(): React.JSX.Element {
     isEditMode,
     formData,
     fetchMembership,
+    handleDataChange,
     handleInputChange,
     handleSaveMembership,
     handleDeleteMembership,
@@ -21,11 +23,9 @@ export default function MembershipDashboard(): React.JSX.Element {
     closeModal,
   } = useMembership();
 
-
   useEffect(() => {
     fetchMembership();
-  }, []);
-
+  }, [fetchMembership]);
 
   const handleDeleteWithConfirm = (id: string) => {
     if (confirm("Apakah Anda yakin ingin menghapus paket ini?")) {
@@ -42,7 +42,6 @@ export default function MembershipDashboard(): React.JSX.Element {
     }
   };
 
-
   const handleSaveWithRefresh = async () => {
     try {
       await handleSaveMembership();
@@ -54,7 +53,7 @@ export default function MembershipDashboard(): React.JSX.Element {
       closeModal();
       await fetchMembership();
     } catch (error) {
-      alert("Gagal menyimpan paket: " + (error?.message || "Unknown error"));
+      alert("Gagal menyimpan paket: " + (error || "Unknown error"));
     }
   };
 
@@ -62,25 +61,29 @@ export default function MembershipDashboard(): React.JSX.Element {
     <Fragment>
       <PageHead title="Membership Plans | CyberNet" />
       <Header />
-      <div className="flex min-h-full bg-[#0B0F19] text-white">
+      <div className="flex min-h-screen bg-[#0B0F19] text-white">
         <Sidebar />
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 p-8 overflow-y-auto pl-70 pt-20">
           <div className="max-w-5xl mx-auto space-y-6">
             <div className="flex justify-between items-center">
               <div>
                 <h1 className="text-2xl font-bold tracking-tight">
-                  Manajemen Paket Membership
+                  Manajemen Paket
+                  <span className="text-blue-400"> Membership</span>
                 </h1>
                 <p className="text-sm text-gray-400">
                   Kelola paket internet dan harga layanan Anda
                 </p>
               </div>
-              <button
-                onClick={openAddModal}
-                className="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/10"
-              >
-                + Tambah Paket
-              </button>
+              <div className="flex justify-between gap-2">
+                <Refresh onClick={handleDataChange} />
+                <button
+                  onClick={openAddModal}
+                  className="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/10"
+                >
+                  + Tambah Paket
+                </button>
+              </div>
             </div>
 
             <MembershipTable
@@ -89,7 +92,6 @@ export default function MembershipDashboard(): React.JSX.Element {
               onEdit={openEditModal}
               onDelete={handleDeleteWithConfirm}
             />
-
 
             {isModalOpen && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -229,4 +231,6 @@ export default function MembershipDashboard(): React.JSX.Element {
       </div>
     </Fragment>
   );
-}
+};
+
+export default MembershipDashboard;

@@ -12,6 +12,8 @@ const useLocation = () => {
   const [selectedId, setSelectedId] = useState<string>("");
   const [areaInput, setAreaInput] = useState<string>("");
   const [statusInput, setStatusInput] = useState<string>("tersedia");
+  const [refreshKey, setRefreshKey] = useState(0);
+
 
   const fetchLocations = useCallback(async () => {
     try {
@@ -44,7 +46,9 @@ const useLocation = () => {
     return () => {
       isMounted.current = false;
     };
-  }, [fetchLocations]);
+  }, [fetchLocations, refreshKey]);
+
+  const handleDataChange = () => setRefreshKey((prev) => prev + 1);
 
   const handleSaveLocation = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,6 +120,7 @@ const useLocation = () => {
     openAddModal,
     openEditModal,
     closeModal,
+    handleDataChange,
     handleSaveLocation,
     handleDeleteLocation,
   };

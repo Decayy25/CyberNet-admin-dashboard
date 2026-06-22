@@ -7,6 +7,7 @@ const useMembership = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [formData, setFormData] = useState<any>({
     paket: "",
     price: 0,
@@ -35,12 +36,17 @@ const useMembership = () => {
 
 
   useEffect(() => {
-    fetchMembership();
-  }, [fetchMembership]);
+    (async () => {
+      await fetchMembership();
+    })();
+  }, [fetchMembership, refreshKey]);
+
+
+  const handleDataChange = () => setRefreshKey((prev) => prev + 1);
 
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData((prev) => ({
+    setFormData((prev: any) => ({
       ...prev,
       [field]: value,
     }));
@@ -68,7 +74,7 @@ const useMembership = () => {
     }
   };
 
-  // ✅ Handle delete
+  // Handle delete
   const handleDeleteMembership = async (id: string) => {
     try {
       setIsLoading(true);
@@ -83,14 +89,14 @@ const useMembership = () => {
     }
   };
 
-  // ✅ Open modal for create
+  // Open modal for create
   const openAddModal = () => {
     setIsEditMode("");
     resetForm();
     setIsModalOpen(true);
   };
 
-  // ✅ Open modal for edit
+  // Open modal for edit
   const openEditModal = (plan: MembershipPlan) => {
     setIsEditMode(plan._id);
     setFormData({
@@ -103,13 +109,13 @@ const useMembership = () => {
     setIsModalOpen(true);
   };
 
-  // ✅ Close modal
+  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     resetForm();
   };
 
-  // ✅ Reset form
+  // Reset form
   const resetForm = () => {
     setIsEditMode("");
     setFormData({
@@ -128,6 +134,7 @@ const useMembership = () => {
     isModalOpen,
     formData,
     fetchMembership,
+    handleDataChange,
     handleInputChange,
     handleSaveMembership,
     handleDeleteMembership,

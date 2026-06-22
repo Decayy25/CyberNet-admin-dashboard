@@ -1,5 +1,5 @@
 import React from "react";
-import { LayoutDashboard, CreditCard, MapPin, LogOut } from "lucide-react";
+import { LayoutDashboard, CreditCard, MapPin, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -10,7 +10,7 @@ interface NavItemProps {
   isActive: boolean;
 }
 
-// ✅ Navigation Item Component
+// Navigation Item Component
 const NavItem = ({ href, icon, label, isActive }: NavItemProps) => {
   return (
     <Link
@@ -30,11 +30,9 @@ const NavItem = ({ href, icon, label, isActive }: NavItemProps) => {
 export default function Sidebar(): React.JSX.Element {
   const router = useRouter();
   const currentPath = router.pathname;
-
-  // ✅ Check if route is active
   const isActive = (path: string) => currentPath === path;
 
-  // ✅ Menu items
+  // Menu items
   const menuItems = [
     {
       href: "/admin/dashboard",
@@ -51,11 +49,15 @@ export default function Sidebar(): React.JSX.Element {
       icon: <MapPin size={18} />,
       label: "Perluasan Wilayah",
     },
+    {
+      href: "/admin/client",
+      icon: <User size={18} />,
+      label: "Kontrol Pelanggan",
+    },
   ];
 
   return (
-    <aside className="w-64 h-screen top-0 bg-[#111827] border-r sticky border-gray-800/60 flex flex-col justify-between p-6 z-40">
-      {/* ✅ TOP SECTION - Menu Items */}
+    <aside className="w-64 h-screen fixed top-0 right- bg-[#111827] border-r  border-gray-800/60 flex flex-col justify-between p-6 z-40">
       <div className="space-y-6">
         {menuItems.map((item) => (
           <NavItem
@@ -68,9 +70,7 @@ export default function Sidebar(): React.JSX.Element {
         ))}
       </div>
 
-      {/* ✅ BOTTOM SECTION - User Info & Logout */}
       <div className="border-t border-gray-800/60 pt-4 flex items-center justify-between">
-        {/* User Profile */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
             CN
@@ -82,11 +82,6 @@ export default function Sidebar(): React.JSX.Element {
             <p className="text-[10px] text-gray-500">Administrator</p>
           </div>
         </div>
-
-        {/* Logout Button */}
-        <button className="text-gray-500 hover:text-red-400 hover:bg-red-500/10 p-2 rounded-lg transition-all duration-200">
-          <LogOut size={16} />
-        </button>
       </div>
     </aside>
   );

@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     case "DELETE": {
-      const result = await LocationController.removeLocationById(req.body);
+      const result = await LocationController.removeLocationById(id);
 
       return res.status(200).json(result);
     }

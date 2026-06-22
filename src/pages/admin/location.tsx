@@ -1,11 +1,12 @@
 import { Fragment } from "react";
 import LocationTable from "@/components/LocationTable";
 import PageHead from "@/components/PageHead";
-import useLocation  from "@/hooks/useLocation";
+import useLocation from "@/hooks/useLocation";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import Refresh from "@/components/refresh";
 
-export default function LocationDashboard(): React.JSX.Element {
+const LocationDashboard = (): React.JSX.Element => {
   const {
     locations,
     isLoading,
@@ -18,6 +19,7 @@ export default function LocationDashboard(): React.JSX.Element {
     openAddModal,
     openEditModal,
     closeModal,
+    handleDataChange,
     handleSaveLocation,
     handleDeleteLocation,
   } = useLocation();
@@ -26,25 +28,28 @@ export default function LocationDashboard(): React.JSX.Element {
     <Fragment>
       <PageHead title="Location Plans | CyberNet" />
       <Header />
-      <div className="flex min-h-full bg-[#0B0F19] text-white">
+      <div className="flex min-h-screen bg-[#0B0F19] text-white">
         <Sidebar />
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 p-8 overflow-y-auto pl-70 pt-20">
           <div className="max-w-5xl mx-auto space-y-6">
             <div className="flex justify-between items-center">
               <div>
                 <h1 className="text-2xl font-bold tracking-tight">
-                  Manajemen Wilayah
+                  Manajemen <span className="text-blue-400">Wilayah</span>
                 </h1>
                 <p className="text-sm text-gray-400">
                   Kelola area jangkauan jaringan internet Wifi hotspot Anda
                 </p>
               </div>
-              <button
-                onClick={openAddModal}
-                className="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/10"
-              >
-                + Tambah Wilayah
-              </button>
+              <div className="flex justify-between gap-2">
+                <Refresh onClick={handleDataChange} />
+                <button
+                  onClick={openAddModal}
+                  className="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/10"
+                >
+                  + Tambah Wilayah
+                </button>
+              </div>
             </div>
 
             <LocationTable
@@ -115,3 +120,5 @@ export default function LocationDashboard(): React.JSX.Element {
     </Fragment>
   );
 }
+
+export default LocationDashboard;

@@ -19,7 +19,11 @@ export interface TypeContactForm {
   email: string;
   address: string;
   message: string;
-  packageId: "PAKET 10 Mbps" | "PAKET 20 Mbps" | "PAKET 30 Mbps" | "PAKET 50 Mbps";
+  packageId:
+    | "PAKET 10 Mbps"
+    | "PAKET 20 Mbps"
+    | "PAKET 30 Mbps"
+    | "PAKET 50 Mbps";
 }
 
 export interface TypeEmail {
@@ -53,4 +57,45 @@ export interface AlertProps {
   confidence: string;
   isVerified: boolean;
   matchedArea?: string;
+}
+
+export interface KPICardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  trend?: number;
+  color: string;
+}
+
+export interface DashboardMetrics {
+  totalLocations: number;
+  activeLocations: number;
+  totalMembership: number;
+  averagePrice: number;
+  totalClient: number;
+  coverageRate: number;
+}
+
+export interface UseDashboardReturn {
+  locations: typeLocation[];
+  membership: MembershipPlan[];
+  client: Client[];
+  isLoading: boolean;
+  metrics: DashboardMetrics;
+  handleDataChange: () => void;
+}
+
+export interface UseClientReturn {
+  client: Client[];
+  isLoading: boolean;
+  isModalOpen: boolean;
+  isEditMode: string;
+  formData: Client;
+  handleInputChange: (field: string, value: string) => void;
+  handleSaveClient: () => Promise<void>;
+  handleDeleteClient: (id: string) => Promise<void>;
+  openAddModal: () => void;
+  openEditModal: (client: Client) => void;
+  closeModal: () => void;
+  handleRefreshClient: () => void;
 }

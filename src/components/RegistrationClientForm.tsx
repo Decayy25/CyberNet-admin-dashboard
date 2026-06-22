@@ -11,7 +11,6 @@ interface FormData {
   phoneNumber: string;
   email: string;
   address: string;
-  message: string;
   packageId: PackageType | "";
 }
 
@@ -21,8 +20,7 @@ const RegistrationClientForm = (): React.JSX.Element => {
     phoneNumber: "",
     email: "",
     address: "",
-    message: "",
-    packageId: "PAKET 10 Mbps" as PackageType,
+    packageId: "PAKET 10 Mbps" as PackageType
   });
 
   const [loading, setLoading] = useState(false);
@@ -78,7 +76,6 @@ const RegistrationClientForm = (): React.JSX.Element => {
         email: formData.email,
         address: formData.address,
         packageId: formData.packageId,
-        message: formData.message,
       });
 
       if (response.data.success) {
@@ -88,7 +85,6 @@ const RegistrationClientForm = (): React.JSX.Element => {
           phoneNumber: "",
           email: "",
           address: "",
-          message: "",
           packageId: "PAKET 10 Mbps" as PackageType,
         });
 

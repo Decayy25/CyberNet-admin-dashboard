@@ -8,7 +8,7 @@ const locationService = {
   async getLocations(): Promise<AxiosResponse> {
     try {
       const response = await axios.get(`${API_BASE}/location`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Error fetching locations:", error);
       throw error;

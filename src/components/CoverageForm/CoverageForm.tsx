@@ -14,7 +14,7 @@ const CoverageForm = () => {
   };
 
   return (
-    <section className="bg-white rounded-3xl shadow p-10">
+    <section className="bg-white rounded-3xl shadow p-10 w-full">
       <h2 className="text-4xl font-bold mb-5">Cek Coverage Area</h2>
 
       <div className="flex gap-4">

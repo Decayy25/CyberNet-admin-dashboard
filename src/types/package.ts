@@ -12,8 +12,8 @@ export const PACKAGE_DETAILS = {
   [PackageType.BASIC]: {
     name: "Paket Basic",
     speed: "10 Mbps",
-    price: 99000,
-    features: ["Internet 10Mbps", "24/7 Support"],
+    price: 170052,
+    features: ["Unlimited", "24/7 Support"],
   },
   [PackageType.STANDARD]: {
     name: "Paket Standard",

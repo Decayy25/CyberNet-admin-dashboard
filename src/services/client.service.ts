@@ -47,9 +47,9 @@ const clientService = {
     }
   },
 
-  async delete(id: string): Promise<AxiosResponse> {
+  async deleteClient(id: string): Promise<AxiosResponse> {
     try {
-      const response = await axios.delete(`${API}client/${id}`);
+      const response = await axios.delete(`${API}/client/${id}`);
       return response;
     } catch (error) {
       console.error("Error delete client:", error);
