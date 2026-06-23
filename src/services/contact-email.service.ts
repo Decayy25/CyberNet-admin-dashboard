@@ -99,7 +99,7 @@ const sendEmail = async (body: TypeContactForm) => {
 
   try {
     const response = await MembershipController.getMembership();
-    const allPackages = response?.data || response?.result || [];
+    const allPackages = response?.data || [];
     const cleanPaketName = packageId.replace(/^PAKET\s+/i, "").trim();
     const packageDetails = allPackages.find(
       (item: any) => item.paket.toLowerCase() === cleanPaketName.toLowerCase(),

@@ -10,9 +10,16 @@ const ClientController = {
     try {
       const result = await clientMember.find().toArray();
 
-      return ResponseHandler.success(result, "berhasil mengambil client");
-    } catch {
-      return ResponseHandler.error("gagal mengambil client");
+      if (!result || result.length === 0) {
+        return ResponseHandler.error("Tidak ada data client");
+      }
+
+      return ResponseHandler.success(result, "Berhasil mengambil client");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Gagal mengambil client";
+
+      return ResponseHandler.error(errorMessage);
     }
   },
 
@@ -32,8 +39,13 @@ const ClientController = {
         result,
         "sukses mengambil client berdasarkan nama",
       );
-    } catch {
-      return ResponseHandler.error("gagal mengambil client berdasarkan nama");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "gagal mengambil client berdasarkan nama";
+
+      return ResponseHandler.error(errorMessage);
     }
   },
 
@@ -43,9 +55,8 @@ const ClientController = {
       const existing = await clientMember.findOne({
         fullName: data.fullName,
         email: data.email,
-        phoneNumber: data.phoneNumber
+        phoneNumber: data.phoneNumber,
       });
-
 
       if (existing) {
         return ResponseHandler.validation(["Client dengan data ini sudah ada"]);
@@ -57,8 +68,11 @@ const ClientController = {
         result.insertedId,
         "sukses menambah client",
       );
-    } catch {
-      return ResponseHandler.error("gagal menambah client");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "gagal menambah client";
+
+      return ResponseHandler.error(errorMessage);
     }
   },
 
@@ -89,8 +103,11 @@ const ClientController = {
       }
 
       return ResponseHandler.success(result, "sukses mengubah data client");
-    } catch {
-      return ResponseHandler.error("gagal mengubah data client");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "gagal mengubah data client";
+
+      return ResponseHandler.error(errorMessage);
     }
   },
 
@@ -109,8 +126,11 @@ const ClientController = {
       }
 
       return ResponseHandler.success(result, "Sukses menghapus client");
-    } catch {
-      return ResponseHandler.error("Gagal menghapus client");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Gagal menghapus client";
+
+      return ResponseHandler.error(errorMessage);
     }
   },
 };
