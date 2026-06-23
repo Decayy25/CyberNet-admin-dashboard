@@ -2,7 +2,7 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT_SECRET } from "@/utils/environment";
 import AdminController from "@/controllers/admin-auth.controller";
-import { ILogin } from "@/types/Auth";
+import { ILogin, IAdmin, ApiResponse } from "@/types/Auth";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -23,20 +23,19 @@ export const authOptions: NextAuthOptions = {
             password: credentials.password,
           };
 
-          const result = await AdminController.AdminLogic(payload);
+          // Type the result properly
+          const result: ApiResponse<IAdmin> =
+            await AdminController.AdminLogic(payload);
 
           if (!result.success) {
-            throw new Error(
-              result.errors?.[0] || result.message || "Login gagal",
-            );
+            throw new Error(result.message || "Login gagal");
           }
 
-          // Return user dengan token
           return {
-            id: result.data.id,
-            name: result.data.identifier,
-            email: result.data.identifier,
-            accessToken: result.data.token,
+            id: result.data!.id,
+            name: result.data!.identifier,
+            email: result.data!.identifier,
+            accessToken: result.data!.token,
           };
         } catch (error) {
           throw new Error(
@@ -53,7 +52,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = user.accessToken;
+        token.accessToken = (user as any).accessToken;
         token.id = user.id;
       }
       return token;
@@ -61,7 +60,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.accessToken = token.accessToken as string;
+        (session as any).accessToken = token.accessToken as string;
       }
       return session;
     },
@@ -71,7 +70,7 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 24 * 60 * 60, // 24 jam
+    maxAge: 24 * 60 * 60,
   },
 };
 

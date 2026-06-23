@@ -6,45 +6,46 @@ export interface ILogin {
   password: string;
 }
 
-declare module "next-auth" {
-  interface Session {
-    accessToken?: string;
-    user?: {
-      id: string;
-      role?: string;
-    } & DefaultSession["user"];
-  }
+export interface IAdmin {
+  id: string;
+  identifier: string;
+  token: string;
+}
 
+
+export type TypeLoginAdmin = {
+  identifier: string;
+  password: string;
+};
+
+declare module "next-auth" {
   interface User extends DefaultUser {
     id: string;
     role?: string;
+    accessToken?: string;
+  }
+
+  interface Session {
+    user: {
+      id: string;
+      role?: string;
+    } & DefaultSession["user"];
     accessToken?: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
+    id?: string;
+    role?: string;
     accessToken?: string;
-    user?: {
-      id: string;
-      role?: string;
-    };
   }
 }
 
-export interface UserExtended extends User {
-  accessToken?: string;
-  role?: string;
-}
+// ✅ HAPUS UserExtended, SessionExtended, JWTExtended
+// Mereka sudah terdefinisi di module declaration di atas
 
-export interface SessionExtended extends Session {
-  accessToken?: string;
-}
-
-export interface JWTExtended extends JWT {
-  user?: UserExtended;
-}
-
+// Form & Email Types
 export type TypeContactForm = {
   fullName: string;
   phoneNumber: string;
@@ -59,20 +60,23 @@ export type TypeEmail = {
   message: string;
 };
 
-export type TypeLoginAdmin = {
-  identifier: string;
-  password: string;
-};
-
-export type typeLocation = {
+// Location & Membership Types
+export type TypeLocation = {
   area: string;
   status: "tersedia" | "tidak_tersedia";
 };
 
-export type typeMembership = {
+export type TypeMembership = {
   paket: string;
   price: number;
   period: "bulan" | "tahun";
-  features: [];
+  features: string[]; // ✅ FIX: [] should be string[]
   isPopular?: boolean;
+};
+
+// ✅ Optional: API Response wrapper
+export type ApiResponse<T> = {
+  success: boolean;
+  message: string;
+  data?: T;
 };
