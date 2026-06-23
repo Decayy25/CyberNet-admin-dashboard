@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
-import type { AppProps, NextPage } from "next/app";
+import type { AppProps } from "next/app";
+import type { NextPage } from "next";
 import { useState, ReactElement, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
