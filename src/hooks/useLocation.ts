@@ -54,7 +54,7 @@ const useLocation = () => {
     e.preventDefault();
 
     const rawPayload: LocationArea = {
-      _id: isEditMode ? selectedId : undefined,
+      _id: isEditMode ? selectedId : "",
       area: areaInput,
       status: statusInput,
     };
