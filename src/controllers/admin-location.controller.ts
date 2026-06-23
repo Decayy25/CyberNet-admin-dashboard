@@ -1,16 +1,17 @@
-import { ObjectId } from "mongodb";
-import { locationForm, locationShema } from "../models/location.models";
-import { region } from "../utils/database";
-import { ResponseHandler } from "../utils/response";
-import { normalizeAreaName } from "../services/location-predict.service";
+import { getRegion, } from "@/utils/database";
+import { ResponseHandler } from "@/utils/response";
+import { normalizeAreaName} from '@/services/location-predict.service';
+import { locationForm, locationShema } from "@/models/location.models";
 import {
   checkExactDuplicate,
   checkFuzzyDuplicate,
-} from "../utils/duplicate-checker";
+} from "@/utils/duplicate-checker";
+import { ObjectId} from "mongodb";
 
 const LocationController = {
   async getLocation() {
     try {
+      const region = await getRegion();
       const result = await region.find().toArray();
 
       if (!result || result.length === 0) {
@@ -19,6 +20,7 @@ const LocationController = {
 
       return ResponseHandler.success(result, "Berhasil mengambil lokasi");
     } catch (error) {
+      console.error("getLocation error:", error);
       if (error instanceof Error) {
         return ResponseHandler.error(error.message);
       }
@@ -31,6 +33,8 @@ const LocationController = {
       if (!area || area.trim().length === 0) {
         return ResponseHandler.validation(["Area harus diisi"]);
       }
+
+      const region = await getRegion(); // ✅ Await collection
 
       const result = await region.findOne({
         area: {
@@ -48,6 +52,7 @@ const LocationController = {
         "Berhasil mengambil lokasi berdasarkan area",
       );
     } catch (error) {
+      console.error("getLocationByArea error:", error);
       if (error instanceof Error) {
         return ResponseHandler.error(error.message);
       }
@@ -57,25 +62,24 @@ const LocationController = {
 
   async addLocation(body: locationForm) {
     try {
+      const region = await getRegion();
+
       const data = await locationShema.validate({
         area: normalizeAreaName(body.area),
         status: body.status,
       });
 
-
-      const isExactDuplicate = await checkExactDuplicate(data.area);
+      const isExactDuplicate = await checkExactDuplicate(data.area, region);
       if (isExactDuplicate) {
         return ResponseHandler.validation(["Lokasi dengan nama ini sudah ada"]);
       }
 
-
-      const fuzzyCheck = await checkFuzzyDuplicate(data.area, 0.8);
+      const fuzzyCheck = await checkFuzzyDuplicate(data.area, 0.8, region);
       if (fuzzyCheck.isDuplicate) {
         return ResponseHandler.validation([
-          `Lokasi ini mirip dengan "${fuzzyCheck.similarArea}" yang sudah ada. Gunakan nama yang berbeda atau update yang ada.`,
+          `Lokasi ini mirip dengan "${fuzzyCheck.similarArea}" yang sudah ada.`,
         ]);
       }
-
 
       const result = await region.insertOne({
         area: data.area,
@@ -93,6 +97,7 @@ const LocationController = {
         "Sukses menambahkan lokasi",
       );
     } catch (error) {
+      console.error("addLocation error:", error);
       if (error instanceof Error) {
         if (error.message.includes("duplicate key")) {
           return ResponseHandler.validation(["Lokasi sudah ada di database"]);
@@ -103,8 +108,11 @@ const LocationController = {
     }
   },
 
+
+
   async updateLocation(id: string, body: locationForm) {
     try {
+      const region = await getRegion();
       if (!ObjectId.isValid(id)) {
         return ResponseHandler.validation(["Format ID tidak valid"]);
       }
@@ -131,7 +139,7 @@ const LocationController = {
             "Lokasi dengan nama ini sudah ada. Gunakan nama yang berbeda.",
           ]);
         }
-
+      }
 
         const fuzzyCheck = await checkFuzzyDuplicate(data.area, 0.8);
         if (fuzzyCheck.isDuplicate) {
@@ -139,7 +147,6 @@ const LocationController = {
             `Lokasi ini mirip dengan "${fuzzyCheck.similarArea}" yang sudah ada.`,
           ]);
         }
-      }
 
       const result = await region.updateOne(
         { _id: new ObjectId(id) },
@@ -175,6 +182,8 @@ const LocationController = {
         return ResponseHandler.validation(["Format ID tidak valid"]);
       }
 
+      const region = await getRegion();
+
       const result = await region.findOneAndDelete({
         _id: new ObjectId(id),
       });
@@ -185,12 +194,13 @@ const LocationController = {
 
       return ResponseHandler.success(result, "Sukses menghapus lokasi");
     } catch (error) {
+      console.error("removeLocationById error:", error);
       if (error instanceof Error) {
         return ResponseHandler.error(error.message);
       }
       return ResponseHandler.error("Gagal menghapus lokasi");
     }
-  },
+  }
 };
 
 export default LocationController;
