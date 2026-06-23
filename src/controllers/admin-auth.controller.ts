@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { AdminSchema } from "@/models/admin.models";
-import { admin } from "@/utils/database";
+import { getAdmin } from "@/utils/database";
 import { JWT_SECRET } from "@/utils/environment";
 import { ResponseHandler } from "@/utils/response";
 import { TypeLoginAdmin } from "@/types";
@@ -9,6 +9,7 @@ import { TypeLoginAdmin } from "@/types";
 const AdminController = {
   async register(body: TypeLoginAdmin) {
     try {
+      const admin = await getAdmin();
       const data = await AdminSchema.validate(body, {
         abortEarly: false,
       });
@@ -33,6 +34,7 @@ const AdminController = {
 
   async AdminLogic(body: TypeLoginAdmin) {
     try {
+      const admin = await getAdmin()
       const data = await AdminSchema.validate(body, {
         abortEarly: false,
       });
