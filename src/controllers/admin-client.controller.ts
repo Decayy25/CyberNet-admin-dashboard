@@ -1,6 +1,6 @@
 import { PackageClient } from "@/models/client.models";
 import { Client } from "@/types";
-import { clientMember } from "@/utils/database";
+import { getClientMember } from "@/utils/database";
 import { ObjectId } from "mongodb";
 import { ResponseHandler } from "@/utils/response";
 import { TypeContactForm } from "@/types/package";
@@ -8,6 +8,7 @@ import { TypeContactForm } from "@/types/package";
 const ClientController = {
   async getClient() {
     try {
+      const clientMember = await getClientMember();
       const result = await clientMember.find().toArray();
 
       if (!result || result.length === 0) {
@@ -25,6 +26,7 @@ const ClientController = {
 
   async getClientByFullName(fullName: string) {
     try {
+      const clientMember = await getClientMember();
       if (!fullName || fullName.trim().length === 0) {
         return ResponseHandler.validation(["nama harus diisi"]);
       }
@@ -51,6 +53,7 @@ const ClientController = {
 
   async addClient(body: TypeContactForm) {
     try {
+      const clientMember = await getClientMember();
       const data = await PackageClient.validate(body);
       const existing = await clientMember.findOne({
         fullName: data.fullName,
@@ -78,6 +81,7 @@ const ClientController = {
 
   async updateClient(id: string, body: Client) {
     try {
+      const clientMember = await getClientMember();
       if (!ObjectId.isValid(id)) {
         return ResponseHandler.error("format ID tidak valid");
       }
@@ -113,6 +117,7 @@ const ClientController = {
 
   async removeById(_id: string) {
     try {
+      const clientMember = await getClientMember();
       if (!ObjectId.isValid(_id)) {
         return ResponseHandler.validation(["Format ID tidak valid"]);
       }
