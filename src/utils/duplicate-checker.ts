@@ -1,67 +1,64 @@
-import { region } from "@/utils/database";
+import { Collection, ObjectId } from "mongodb";
+import { getRegion } from "@/utils/database";
 import { locationForm } from "@/models/location.models";
 
-/**
- * Hapus extra spasi dan normalisasi untuk perbandingan duplikasi
- */
+const region = await getRegion()
+
 function normalizeForDuplicateCheck(area: string): string {
   return area
     .toLowerCase()
     .trim()
     .replace(/\s+/g, " ")
-    .replace(/[.,\-_]/g, ""); // Hapus special chars
+    .replace(/[.,\-_]/g, "");
 }
 
-/**
- * Cek apakah area sudah ada di database (exact match)
- */
-export async function checkExactDuplicate(area: string): Promise<boolean> {
-  try {
-    const normalized = normalizeForDuplicateCheck(area);
-    const existing = await region.findOne({
-      areaSearchKey: normalized, // Field ini untuk search/duplicate check
-    });
-    return !!existing;
-  } catch (error) {
-    console.error("Error checking exact duplicate:", error);
-    return false;
-  }
-}
-
-/**
- * Cek apakah area mirip dengan yang sudah ada (fuzzy matching)
- * Threshold: 0.75 = 75% sama dianggap duplikasi
- */
-export async function checkFuzzyDuplicate(
+export const checkExactDuplicate = async (
   area: string,
-  threshold: number = 0.75,
-): Promise<{ isDuplicate: boolean; similarArea?: string }> {
-  try {
-    const normalized = normalizeForDuplicateCheck(area);
-    const allAreas = await region.find({}).toArray();
-
-    for (const doc of allAreas) {
-      const existingNormalized = normalizeForDuplicateCheck(doc.area);
-      const similarity = calculateSimilarity(normalized, existingNormalized);
-
-      if (similarity >= threshold) {
-        return {
-          isDuplicate: true,
-          similarArea: doc.area,
-        };
-      }
-    }
-
-    return { isDuplicate: false };
-  } catch (error) {
-    console.error("Error checking fuzzy duplicate:", error);
-    return { isDuplicate: false };
+  region?: Collection,
+) => {
+  if (!region) {
+    region = await getRegion();
   }
-}
 
-/**
- * Hitung Levenshtein distance antara dua string
- */
+  const result = await region.findOne({
+    area: {
+      $regex: `^${area.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+      $options: "i",
+    },
+  });
+
+  return !!result;
+};
+
+export const checkFuzzyDuplicate = async (
+  area: string,
+  threshold: number,
+  region?: Collection,
+) => {
+  if (!region) {
+    const { getRegion } = await import("./database");
+    region = await getRegion();
+  }
+
+  const normalized = normalizeForDuplicateCheck(area);
+  const allAreas = await region.find({}).toArray();
+
+  for (const doc of allAreas) {
+    const existingNormalized = normalizeForDuplicateCheck(doc.area);
+    const similarity = calculateSimilarity(normalized, existingNormalized);
+
+    if (similarity >= threshold) {
+      return {
+        isDuplicate: true,
+        similarArea: doc.area,
+      };
+    }
+  }
+
+  return { isDuplicate: false };
+};
+
+
 function calculateLevenshteinDistance(str1: string, str2: string): number {
   const matrix: number[][] = [];
 
@@ -90,20 +87,13 @@ function calculateLevenshteinDistance(str1: string, str2: string): number {
   return matrix[str2.length][str1.length];
 }
 
-/**
- * Hitung similarity score (0-1)
- * 1 = identik, 0 = sangat berbeda
- */
+
 function calculateSimilarity(str1: string, str2: string): number {
   const distance = calculateLevenshteinDistance(str1, str2);
   const maxLength = Math.max(str1.length, str2.length);
   return 1 - distance / maxLength;
 }
 
-/**
- * Update area (upsert: update jika ada, insert jika tidak)
- * Ini menghindari duplikasi otomatis
- */
 export async function upsertLocation(
   areaSearchKey: string,
   data: locationForm,
@@ -118,7 +108,7 @@ export async function upsertLocation(
           updatedAt: new Date(),
         },
       },
-      { upsert: true }, // Create jika tidak ada, update jika ada
+      { upsert: true },
     );
 
     return result;
@@ -128,9 +118,7 @@ export async function upsertLocation(
   }
 }
 
-/**
- * Get all unique areas (untuk deduplikasi)
- */
+
 export async function getUniqueAreas() {
   try {
     const areas = await region.find({}).toArray();
@@ -141,10 +129,7 @@ export async function getUniqueAreas() {
   }
 }
 
-/**
- * Hapus duplikasi dari database (cleanup)
- * HATI-HATI: Operasi ini menukar database!
- */
+
 export async function removeDuplicates(): Promise<{
   removedCount: number;
   keptCount: number;
@@ -167,7 +152,7 @@ export async function removeDuplicates(): Promise<{
     // Delete duplikasi
     if (toDelete.length > 0) {
       const { deletedCount } = await region.deleteMany({
-        _id: { $in: toDelete.map((id) => require("mongodb").ObjectId(id)) },
+        _id: { $in: toDelete.map((id) => new ObjectId(id)) },
       });
 
       return {
@@ -183,9 +168,7 @@ export async function removeDuplicates(): Promise<{
   }
 }
 
-/**
- * Rebuild search keys untuk semua area (untuk migration)
- */
+
 export async function rebuildSearchKeys() {
   try {
     const allAreas = await region.find({}).toArray();

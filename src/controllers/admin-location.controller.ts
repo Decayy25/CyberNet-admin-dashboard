@@ -1,12 +1,11 @@
-import { getRegion, } from "@/utils/database";
-import { ResponseHandler } from "@/utils/response";
-import { normalizeAreaName} from '@/services/location-predict.service';
+import { getRegion } from "@/utils/database";
+import { normalizeAreaName } from "@/services/location-predict.service";
 import { locationForm, locationShema } from "@/models/location.models";
 import {
   checkExactDuplicate,
   checkFuzzyDuplicate,
 } from "@/utils/duplicate-checker";
-import { ObjectId} from "mongodb";
+import { ObjectId } from "mongodb";
 
 const LocationController = {
   async getLocation() {
@@ -15,26 +14,45 @@ const LocationController = {
       const result = await region.find().toArray();
 
       if (!result || result.length === 0) {
-        return ResponseHandler.success([], "Belum ada data lokasi");
+        return {
+          status: 200,
+          success: true,
+          message: "Belum ada data lokasi",
+          data: [],
+        };
       }
 
-      return ResponseHandler.success(result, "Berhasil mengambil lokasi");
+      return {
+        status: 200,
+        success: true,
+        message: "Berhasil mengambil lokasi",
+        data: result,
+      };
     } catch (error) {
-      console.error("getLocation error:", error);
-      if (error instanceof Error) {
-        return ResponseHandler.error(error.message);
-      }
-      return ResponseHandler.error("Kesalahan mencari lokasi");
+      const errorMessage =
+        error instanceof Error ? error.message : "Kesalahan mencari lokasi";
+
+      return {
+        status: 500,
+        success: false,
+        message: errorMessage,
+        data: null,
+      };
     }
   },
 
   async getLocationByArea(area: string) {
     try {
       if (!area || area.trim().length === 0) {
-        return ResponseHandler.validation(["Area harus diisi"]);
+        return {
+          status: 400,
+          success: false,
+          message: "Area harus diisi",
+          data: null,
+        };
       }
 
-      const region = await getRegion(); // ✅ Await collection
+      const region = await getRegion();
 
       const result = await region.findOne({
         area: {
@@ -44,19 +62,32 @@ const LocationController = {
       });
 
       if (!result) {
-        return ResponseHandler.error("Lokasi tidak ditemukan");
+        return {
+          status: 404,
+          success: false,
+          message: "Lokasi tidak ditemukan",
+          data: null,
+        };
       }
 
-      return ResponseHandler.success(
-        result,
-        "Berhasil mengambil lokasi berdasarkan area",
-      );
+      return {
+        status: 200,
+        success: true,
+        message: "Berhasil mengambil lokasi berdasarkan area",
+        data: result,
+      };
     } catch (error) {
-      console.error("getLocationByArea error:", error);
-      if (error instanceof Error) {
-        return ResponseHandler.error(error.message);
-      }
-      return ResponseHandler.error("Gagal menemukan lokasi berdasarkan area");
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Gagal menemukan lokasi berdasarkan area";
+
+      return {
+        status: 500,
+        success: false,
+        message: errorMessage,
+        data: null,
+      };
     }
   },
 
@@ -70,15 +101,25 @@ const LocationController = {
       });
 
       const isExactDuplicate = await checkExactDuplicate(data.area, region);
+
       if (isExactDuplicate) {
-        return ResponseHandler.validation(["Lokasi dengan nama ini sudah ada"]);
+        return {
+          status: 400,
+          success: false,
+          message: "Lokasi dengan nama ini sudah ada",
+          data: null,
+        };
       }
 
       const fuzzyCheck = await checkFuzzyDuplicate(data.area, 0.8, region);
+
       if (fuzzyCheck.isDuplicate) {
-        return ResponseHandler.validation([
-          `Lokasi ini mirip dengan "${fuzzyCheck.similarArea}" yang sudah ada.`,
-        ]);
+        return {
+          status: 400,
+          success: false,
+          message: `Lokasi ini mirip dengan "${fuzzyCheck.similarArea}" yang sudah ada.`,
+          data: null,
+        };
       }
 
       const result = await region.insertOne({
@@ -92,29 +133,36 @@ const LocationController = {
         updatedAt: new Date(),
       });
 
-      return ResponseHandler.success(
-        result.insertedId,
-        "Sukses menambahkan lokasi",
-      );
+      return {
+        status: 201,
+        success: true,
+        message: "Sukses menambahkan lokasi",
+        data: result.insertedId,
+      };
     } catch (error) {
-      console.error("addLocation error:", error);
-      if (error instanceof Error) {
-        if (error.message.includes("duplicate key")) {
-          return ResponseHandler.validation(["Lokasi sudah ada di database"]);
-        }
-        return ResponseHandler.error(error.message);
-      }
-      return ResponseHandler.error("Gagal menambahkan lokasi");
+      const errorMessage =
+        error instanceof Error ? error.message : "Gagal menambahkan lokasi";
+
+      return {
+        status: 500,
+        success: false,
+        message: errorMessage,
+        data: null,
+      };
     }
   },
-
-
 
   async updateLocation(id: string, body: locationForm) {
     try {
       const region = await getRegion();
+
       if (!ObjectId.isValid(id)) {
-        return ResponseHandler.validation(["Format ID tidak valid"]);
+        return {
+          status: 400,
+          success: false,
+          message: "Format ID tidak valid",
+          data: null,
+        };
       }
 
       const data = await locationShema.validate({
@@ -122,31 +170,43 @@ const LocationController = {
         status: body.status,
       });
 
-
       const currentDoc = await region.findOne({
         _id: new ObjectId(id),
       });
 
       if (!currentDoc) {
-        return ResponseHandler.error("Lokasi tidak ditemukan");
+        return {
+          status: 404,
+          success: false,
+          message: "Lokasi tidak ditemukan",
+          data: null,
+        };
       }
-
 
       if (currentDoc.area.toLowerCase() !== data.area.toLowerCase()) {
-        const isExactDuplicate = await checkExactDuplicate(data.area);
+        const isExactDuplicate = await checkExactDuplicate(data.area, region);
+
         if (isExactDuplicate) {
-          return ResponseHandler.validation([
-            "Lokasi dengan nama ini sudah ada. Gunakan nama yang berbeda.",
-          ]);
+          return {
+            status: 400,
+            success: false,
+            message:
+              "Lokasi dengan nama ini sudah ada. Gunakan nama yang berbeda.",
+            data: null,
+          };
         }
       }
 
-        const fuzzyCheck = await checkFuzzyDuplicate(data.area, 0.8);
-        if (fuzzyCheck.isDuplicate) {
-          return ResponseHandler.validation([
-            `Lokasi ini mirip dengan "${fuzzyCheck.similarArea}" yang sudah ada.`,
-          ]);
-        }
+      const fuzzyCheck = await checkFuzzyDuplicate(data.area, 0.8, region);
+
+      if (fuzzyCheck.isDuplicate) {
+        return {
+          status: 400,
+          success: false,
+          message: `Lokasi ini mirip dengan "${fuzzyCheck.similarArea}" yang sudah ada.`,
+          data: null,
+        };
+      }
 
       const result = await region.updateOne(
         { _id: new ObjectId(id) },
@@ -164,22 +224,42 @@ const LocationController = {
       );
 
       if (result.matchedCount === 0) {
-        return ResponseHandler.error("Lokasi tidak ditemukan");
+        return {
+          status: 404,
+          success: false,
+          message: "Lokasi tidak ditemukan",
+          data: null,
+        };
       }
 
-      return ResponseHandler.success(result, "Sukses mengedit lokasi");
+      return {
+        status: 200,
+        success: true,
+        message: "Sukses mengedit lokasi",
+        data: result,
+      };
     } catch (error) {
-      if (error instanceof Error) {
-        return ResponseHandler.error(error.message);
-      }
-      return ResponseHandler.error("Gagal update lokasi");
+      const errorMessage =
+        error instanceof Error ? error.message : "Gagal update lokasi";
+
+      return {
+        status: 500,
+        success: false,
+        message: errorMessage,
+        data: null,
+      };
     }
   },
 
   async removeLocationById(id: string) {
     try {
       if (!ObjectId.isValid(id)) {
-        return ResponseHandler.validation(["Format ID tidak valid"]);
+        return {
+          status: 400,
+          success: false,
+          message: "Format ID tidak valid",
+          data: null,
+        };
       }
 
       const region = await getRegion();
@@ -189,18 +269,32 @@ const LocationController = {
       });
 
       if (!result) {
-        return ResponseHandler.error("Lokasi tidak ditemukan");
+        return {
+          status: 404,
+          success: false,
+          message: "Lokasi tidak ditemukan",
+          data: null,
+        };
       }
 
-      return ResponseHandler.success(result, "Sukses menghapus lokasi");
+      return {
+        status: 200,
+        success: true,
+        message: "Sukses menghapus lokasi",
+        data: result,
+      };
     } catch (error) {
-      console.error("removeLocationById error:", error);
-      if (error instanceof Error) {
-        return ResponseHandler.error(error.message);
-      }
-      return ResponseHandler.error("Gagal menghapus lokasi");
+      const errorMessage =
+        error instanceof Error ? error.message : "Gagal menghapus lokasi";
+
+      return {
+        status: 500,
+        success: false,
+        message: errorMessage,
+        data: null,
+      };
     }
-  }
+  },
 };
 
 export default LocationController;

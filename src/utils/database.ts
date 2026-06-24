@@ -5,12 +5,11 @@ let cachedClient: MongoClient | null = null;
 
 const connectDB = async () => {
   if (cachedClient) {
-    console.log("♻️ Using cached MongoDB connection");
     return cachedClient;
   }
 
   try {
-    console.log("🔌 Connecting to MongoDB...");
+    console.log("Connecting to MongoDB...");
 
     const client = new MongoClient(DATABASE_URL, {
       maxPoolSize: 10,

@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { AdminSchema } from "@/models/admin.models";
 import { getAdmin } from "@/utils/database";
 import { JWT_SECRET } from "@/utils/environment";
-import { ResponseHandler } from "@/utils/response";
 import { TypeLoginAdmin } from "@/types";
 
 const AdminController = {
@@ -21,20 +20,31 @@ const AdminController = {
         password: hashed,
       });
 
-      return ResponseHandler.success(result, "Sukses membuat akun");
+      return {
+        status: 200,
+        succes: true,
+        message: "Berhasil mendaftar",
+        data: result,
+      };
     } catch (error) {
       if (error instanceof Error && error.message.includes("duplicate key")) {
-        return ResponseHandler.validation(["Identifier sudah terdaftar"]);
+        return {
+          status: 300,
+          success: false,
+          message: "Identifier sudah terdaftar",
+        };
       }
-      return ResponseHandler.error(
-        error instanceof Error ? error.message : "Gagal membuat akun",
-      );
+      return {
+        status: 400,
+        success: false,
+        message: "gagal membuat akun",
+      };
     }
   },
 
   async AdminLogic(body: TypeLoginAdmin) {
     try {
-      const admin = await getAdmin()
+      const admin = await getAdmin();
       const data = await AdminSchema.validate(body, {
         abortEarly: false,
       });
@@ -44,13 +54,17 @@ const AdminController = {
       });
 
       if (!Admin) {
-        return ResponseHandler.validation(["Identifier atau password salah"]);
+        return {
+          message: "Identifier atau password salah",
+        };
       }
 
       const match = await bcrypt.compare(data.password, Admin.password);
 
       if (!match) {
-        return ResponseHandler.validation(["Identifier atau password salah"]);
+        return {
+          message: "Identifier atau password salah",
+        };
       }
 
       const token = jwt.sign(
@@ -64,18 +78,19 @@ const AdminController = {
         },
       );
 
-      return ResponseHandler.success(
-        {
-          id: Admin._id.toString(),
-          token,
-          identifier: Admin.identifier,
-        },
-        "Login berhasil",
-      );
+      return {
+        id: Admin._id.toString(),
+        token,
+        identifier: Admin.identifier,
+        message: "Login berhasil",
+      };
     } catch (error) {
-      return ResponseHandler.error(
-        error instanceof Error ? error.message : "Terjadi kesalahan saat login",
-      );
+      return {
+        status: 400,
+        success: false,
+        message: "Terjadi kesalahan saat login",
+        error
+      };
     }
   },
 };

@@ -13,8 +13,6 @@ const handler = async ( req: NextApiRequest, res: NextApiResponse) => {
             message: "gagal prediksi lokasi"
         })
     }
-    
-
 }
 
 export default handler;

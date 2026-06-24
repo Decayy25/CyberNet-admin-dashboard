@@ -3,7 +3,7 @@ import { isValidPackage, TypeContactForm } from "@/types/package";
 import { USER_EMAIL, USER_PASS } from "@/utils/environment";
 import ClientController from "@/controllers/admin-client.controller";
 import MembershipController from "@/controllers/admin-membership.controller";
-import { clientMember } from "@/utils/database";
+import { getClientMember } from "@/utils/database";
 
 export const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -53,6 +53,7 @@ const sendEmail = async (body: TypeContactForm) => {
 
   // Validasi duplikasi data di database
   try {
+    const clientMember = await getClientMember();
     const existingClient = await clientMember.findOne({
       $or: [
         { fullName: { $regex: fullName, $options: "i" } },

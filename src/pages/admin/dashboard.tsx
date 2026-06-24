@@ -105,9 +105,9 @@ const DashboardPage = (): React.JSX.Element => {
     <Fragment>
       <PageHead title="Dashboard | CyberNet" />
       <Header />
-      <div className="flex min-h-full bg-[#0B0F19] text-white">
+      <div className="flex min-h-screen bg-[#0B0F19] text-white">
         <Sidebar />
-        <main className="flex-1 p-8 overflow-y-auto pl-70 pt-20">
+        <main className="flex-1 p-8 overflow-y-auto pl-70 pt-20 min-h-screen">
           <div className="max-w-7xl mx-auto space-y-6">
             <div>
               <div className="flex justify-between items-center">

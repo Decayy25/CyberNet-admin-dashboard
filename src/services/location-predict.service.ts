@@ -1,5 +1,5 @@
 import natural from "natural";
-import { region } from "@/utils/database";
+import { getRegion } from "@/utils/database";
 import LocationController from "@/controllers/admin-location.controller"
 
 interface LocationDoc {
@@ -94,6 +94,7 @@ const predictAvailability = async (body: {
   area: string;
 }): Promise<PredictionResponse> => {
   try {
+    const region = await getRegion()
     const { area } = body;
     if (!area) return { status: "Input tidak valid" };
 
