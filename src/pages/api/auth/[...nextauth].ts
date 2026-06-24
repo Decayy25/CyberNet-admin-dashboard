@@ -27,15 +27,17 @@ export const authOptions: NextAuthOptions = {
           const result: ApiResponse<IAdmin> =
             await AdminController.AdminLogic(payload);
 
-          if (!result.success) {
+          if (!result.success || !result.data) {
             throw new Error(result.message || "Login gagal");
           }
 
+          const admin = result.data;
+
           return {
-            id: result.data!.id,
-            name: result.data!.identifier,
-            email: result.data!.identifier,
-            accessToken: result.data!.token,
+            id: admin.id,
+            name: admin.identifier,
+            email: admin.identifier,
+            accessToken: admin.token,
           };
         } catch (error) {
           throw new Error(

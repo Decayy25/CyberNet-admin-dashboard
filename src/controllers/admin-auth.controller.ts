@@ -22,7 +22,7 @@ const AdminController = {
 
       return {
         status: 200,
-        succes: true,
+        success: true,
         message: "Berhasil mendaftar",
         data: result,
       };
@@ -45,6 +45,7 @@ const AdminController = {
   async AdminLogic(body: TypeLoginAdmin) {
     try {
       const admin = await getAdmin();
+
       const data = await AdminSchema.validate(body, {
         abortEarly: false,
       });
@@ -55,7 +56,10 @@ const AdminController = {
 
       if (!Admin) {
         return {
+          status: 401,
+          success: false,
           message: "Identifier atau password salah",
+          data: null,
         };
       }
 
@@ -63,7 +67,10 @@ const AdminController = {
 
       if (!match) {
         return {
+          status: 401,
+          success: false,
           message: "Identifier atau password salah",
+          data: null,
         };
       }
 
@@ -79,16 +86,21 @@ const AdminController = {
       );
 
       return {
-        id: Admin._id.toString(),
-        token,
-        identifier: Admin.identifier,
+        status: 200,
+        success: true,
         message: "Login berhasil",
+        data: {
+          id: Admin._id.toString(),
+          token,
+          identifier: Admin.identifier,
+        },
       };
     } catch (error) {
       return {
-        status: 400,
+        status: 500,
         success: false,
         message: "Terjadi kesalahan saat login",
+        data: null,
         error
       };
     }

@@ -12,7 +12,6 @@ export interface IAdmin {
   token: string;
 }
 
-
 export type TypeLoginAdmin = {
   identifier: string;
   password: string;
@@ -75,8 +74,9 @@ export type TypeMembership = {
 };
 
 // ✅ Optional: API Response wrapper
-export type ApiResponse<T> = {
+export interface ApiResponse<T = unknown> {
+  status: number;
   success: boolean;
   message: string;
-  data?: T;
-};
+  data: T | null;
+}
