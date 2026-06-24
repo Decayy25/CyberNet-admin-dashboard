@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import AdminController from "@/controllers/admin-auth.controller";
 import { TypeLoginAdmin } from "@/types/UI";
-import { admin } from "@/utils/database";
+import { getAdmin } from "@/utils/database";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Validasi method
@@ -13,6 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
+    const admin = await getAdmin();
     // Ambil body dari request
     const body: TypeLoginAdmin = req.body;
 
