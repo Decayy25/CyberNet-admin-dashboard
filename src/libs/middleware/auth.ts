@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
-import { ResponseHandler } from "@/utils/response";
 
 export interface AuthPayload {
   id: string;
@@ -59,9 +58,12 @@ export const withAuth = (handler: any) => {
     const user = verifyToken(req);
 
     if (!user) {
-      return res
-        .status(401)
-        .json(ResponseHandler.error("Token tidak ditemukan atau tidak valid"));
+      return res.status(401).json({
+        status: 401,
+        success: false,
+        message: "Token tidak ditemukan atau tidak valid",
+        data: null,
+      });
     }
 
     // Attach user ke request object
@@ -80,21 +82,23 @@ export const withAdminAuth = (handler: any) => {
     const user = (req as any).user as AuthPayload | undefined;
 
     if (!user) {
-      return res
-        .status(403)
-        .json(
-          ResponseHandler.error(
-            "User tidak ditemukan. Silakan login terlebih dahulu",
-          ),
-        );
+      return res.status(403).json({
+        status: 403,
+        success: false,
+        message: "User tidak ditemukan. Silakan login terlebih dahulu",
+        data: null,
+      });
     }
 
     // Jika ada field role di user payload, bisa dicek di sini
     // const hasAdminRole = user.role === 'admin';
     // if (!hasAdminRole) {
-    //   return res.status(403).json(
-    //     ResponseHandler.error('Anda tidak memiliki akses admin')
-    //   );
+    //   return res.status(403).json({
+    //      status: 403,
+    //       success: false,
+    //       message: "Anda tidak memiliki akses admin",
+    //       data: null,
+    //});
     // }
 
     return handler(req, res);
