@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import predictAvailability from "@/services/location-predict.service";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== "POST") {
@@ -10,6 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
   try {
+    const { default: predictAvailability} = await import("@/services/location-predict.service")
     const result = await predictAvailability(req.body);
 
     return res.status(200).json(result);
