@@ -42,7 +42,7 @@ const getDB = async () => {
   return client.db("cybernet");
 };
 
-const getCollection = async (collectionName: string) => {
+export const getCollection = async (collectionName: string) => {
   const db = await getDB();
   return db.collection(collectionName);
 };

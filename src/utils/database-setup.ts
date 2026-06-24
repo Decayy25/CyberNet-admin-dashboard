@@ -1,61 +1,44 @@
-import { db } from "./database";
+import { getRegion, getAdmin, getMembership, getCollection } from "./database";
 
-/**
- * Setup all necessary indexes untuk optimization & duplicate prevention
- * Call this once during app initialization
- */
-export async function setupDatabaseIndexes() {
+export const setupDatabaseIndexes = async () => {
   try {
-    const region = db.collection("regions");
-    const admin = db.collection("admin");
-    const membership = db.collection("membership");
+    const region = await getRegion();
+    const admin = await getAdmin();
+    const membership = await getMembership();
 
-    console.log("🔧 Creating database indexes...");
+    console.log("Creating database indexes...");
 
-    // ========== REGIONS COLLECTION ==========
-    // 1. Unique index on areaSearchKey (prevent exact duplicates)
     await region.createIndex({ areaSearchKey: 1 }, { unique: true });
     console.log("✅ Created unique index on areaSearchKey");
 
-    // 2. Index on area (for quick search)
     await region.createIndex({ area: 1 });
     console.log("✅ Created index on area");
 
-    // 3. Index on status (for filtering)
     await region.createIndex({ status: 1 });
     console.log("✅ Created index on status");
 
-    // 4. Compound index (status + areaSearchKey)
     await region.createIndex({ status: 1, areaSearchKey: 1 });
     console.log("✅ Created compound index on status + areaSearchKey");
 
-    // 5. Index on createdAt & updatedAt (for sorting)
     await region.createIndex({ createdAt: -1 });
     await region.createIndex({ updatedAt: -1 });
     console.log("✅ Created indexes on createdAt & updatedAt");
 
-    // ========== ADMIN COLLECTION ==========
-    // Unique index on identifier (prevent duplicate logins)
     await admin.createIndex({ identifier: 1 }, { unique: true });
     console.log("✅ Created unique index on admin.identifier");
 
-    // Index on createdAt
     await admin.createIndex({ createdAt: -1 });
     console.log("✅ Created index on admin.createdAt");
 
-    // ========== MEMBERSHIP COLLECTION ==========
-    // Index on status
     await membership.createIndex({ status: 1 });
     console.log("✅ Created index on membership.status");
 
-    // Index on userId + locationId (prevent duplicate memberships)
     await membership.createIndex(
       { userId: 1, locationId: 1 },
       { unique: true },
     );
     console.log("✅ Created unique compound index on membership");
 
-    // Index on createdAt
     await membership.createIndex({ createdAt: -1 });
     console.log("✅ Created index on membership.createdAt");
 
@@ -67,7 +50,7 @@ export async function setupDatabaseIndexes() {
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("already exists")) {
-      console.log("⚠️  Indexes already exist (this is OK)");
+      console.log("⚠️ Indexes already exist (this is OK)");
       return {
         success: true,
         message: "Indexes already exist",
@@ -77,30 +60,26 @@ export async function setupDatabaseIndexes() {
     console.error("❌ Error creating indexes:", error);
     throw error;
   }
-}
+};
 
-/**
- * Get all existing indexes untuk diagnostics
- */
-export async function getIndexes(collectionName: string) {
+
+export const getIndexes = async (collectionName: string) => {
   try {
-    const collection = db.collection(collectionName);
+    const collection = await getCollection(collectionName);
     const indexes = await collection.listIndexes().toArray();
     return indexes;
   } catch (error) {
     console.error(`Error getting indexes for ${collectionName}:`, error);
     return [];
   }
-}
+};
 
-/**
- * Drop specific index (useful untuk troubleshooting)
- * WARNING: Be careful with this!
- */
-export async function dropIndex(collectionName: string, indexName: string) {
+
+export const dropIndex = async (collectionName: string, indexName: string) => {
   try {
-    const collection = db.collection(collectionName);
+    const collection = await getCollection(collectionName);
     await collection.dropIndex(indexName);
+
     console.log(
       `✅ Dropped index '${indexName}' from collection '${collectionName}'`,
     );
@@ -112,44 +91,32 @@ export async function dropIndex(collectionName: string, indexName: string) {
     );
     throw error;
   }
-}
+};
 
-/**
- * Get collection statistics untuk monitoring
- */
-export async function getCollectionStats(collectionName: string) {
+
+export const getCollectionStats = async (collectionName: string) => {
   try {
-    const collection = db.collection(collectionName);
-    const countResult = await collection.countDocuments();
+    const collection = await getCollection(collectionName);
 
-    // Get index information
-    const indexes = await collection.listIndexes().toArray();
-    const indexSizes: Record<string, number> = {};
 
-    let totalIndexSize = 0;
-    for (const index of indexes) {
-      // Estimate index size (rough calculation)
-      const estimatedSize = countResult * 10; // Rough estimate
-      indexSizes[index.name || "_id_"] = estimatedSize;
-      totalIndexSize += estimatedSize;
-    }
+    const [stats] = await collection
+      .aggregate([{ $collStats: { storageStats: {} } }])
+      .toArray();
+
+    const storageStats = stats?.storageStats || {};
 
     return {
       name: collectionName,
-      documentCount: countResult,
-      averageDocumentSize: 200, // Estimated average
-      indexCount: indexes.length,
-      indexSize: totalIndexSize,
-      indexes: indexSizes,
+      documentCount: storageStats.count || 0,
+      averageDocumentSize: storageStats.avgObjSize || 0,
+      indexCount: storageStats.nindexes || 0,
+      indexSize: storageStats.totalIndexSize || 0,
+      indexes: storageStats.indexSizes || {},
     };
   } catch (error) {
     console.error(`Error getting stats for ${collectionName}:`, error);
     return null;
   }
-}
+};
 
-/**
- * Call this in your main server file untuk initialize indexes
- * Example dalam src/pages/api/setup.ts
- */
 export default setupDatabaseIndexes;
