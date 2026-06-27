@@ -1,5 +1,5 @@
 import { Client } from "@/types";
-import { Edit2, Trash2, Loader } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 
 interface ClientTableProps {
   client: Client[];
@@ -18,17 +18,19 @@ const ClientTable = ({
     await onDelete(id);
   };
 
+  if (isLoading) {
+    return (
+      <div className="bg-[#111827] border border-gray-800 rounded-2xl overflow-hidden p-8">
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#111827] border border-gray-800 rounded-2xl overflow-hidden">
-        {/* Loading state */}
-      {isLoading && (
-        <div className="flex items-center justify-center p-8">
-          <Loader size={24} className="animate-spin text-blue-400" />
-          <span className="ml-3 text-gray-400">Loading data...</span>
-        </div>
-      )}
 
-      {/* Table */}
       {!isLoading && client.length > 0 && (
         <div className="overflow-x-auto">
           <table className="w-full">

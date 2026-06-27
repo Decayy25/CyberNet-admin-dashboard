@@ -46,7 +46,7 @@ const useMembership = () => {
 
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData((prev: any) => ({
+    setFormData((prev: []) => ({
       ...prev,
       [field]: value,
     }));

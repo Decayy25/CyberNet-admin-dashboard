@@ -49,3 +49,75 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+.pricing-card {
+  width: 320px;
+  border-radius: 20px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eee;
+  font-family: sans-serif;
+}
+
+.pricing-header {
+  background: #0d47a1;
+  color: white;
+  text-align: center;
+  padding: 18px;
+}
+
+.pricing-header h2 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.pricing-body {
+  padding: 30px 24px;
+  text-align: center;
+}
+
+.pricing-body h1 {
+  color: #2563eb;
+  font-size: 48px;
+  margin: 0;
+}
+
+.pricing-body span {
+  color: #555;
+  font-size: 18px;
+}
+
+.feature-list {
+  margin-top: 35px;
+}
+
+.feature-item {
+  text-align: left;
+  padding: 14px 0;
+  border-bottom: 1px solid #ececec;
+  font-size: 18px;
+}
+
+.tax-text {
+  margin: 35px 0 20px;
+  color: #777;
+  font-size: 15px;
+}
+
+.pricing-body button {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.pricing-body button:hover {
+  background: #1d4ed8;
+}

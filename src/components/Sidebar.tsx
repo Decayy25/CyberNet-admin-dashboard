@@ -73,7 +73,7 @@ export default function Sidebar(): React.JSX.Element {
       <div className="border-t border-gray-800/60 pt-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
-            CN
+            <User size={20} />
           </div>
           <div>
             <h4 className="text-xs font-bold text-white tracking-wide">

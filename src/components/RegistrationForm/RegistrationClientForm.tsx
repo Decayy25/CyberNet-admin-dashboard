@@ -106,13 +106,17 @@ const RegistrationClientForm = (): React.JSX.Element => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8">
+    <section id="daftar" className="w-full max-w-4xl mx-auto px-4 py-8">
       <div className="bg-white rounded-3xl shadow-lg p-8 md:p-12">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 text-center">
           Pendaftaran Pelanggan Baru
         </h2>
+        <p className="text-center text-gray-500 mt-2">
+          Sebelum isi Form, harap cek coverage/area anda barang kali tidak
+          terjangakau layanan kami.
+        </p>
         <p className="text-center text-gray-500 mb-8">
-          Isi form di bawah untuk mendaftar layanan internet kami
+          Isi form di bawah untuk mendaftar layanan internet kami.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -131,7 +135,6 @@ const RegistrationClientForm = (): React.JSX.Element => {
               />
             </div>
 
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 No WhatsApp
@@ -146,7 +149,6 @@ const RegistrationClientForm = (): React.JSX.Element => {
               />
             </div>
           </div>
-
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -223,7 +225,7 @@ const RegistrationClientForm = (): React.JSX.Element => {
           mengkonfirmasi pendaftaran
         </p>
       </div>
-    </div>
+    </section>
   );
 }
 

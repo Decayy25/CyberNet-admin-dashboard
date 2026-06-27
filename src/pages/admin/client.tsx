@@ -3,8 +3,8 @@ import PageHead from "@/components/PageHead";
 import Header from "@/components/Header";
 import Refresh from "@/components/refresh";
 import Sidebar from "@/components/Sidebar";
-import ClientTable from "@/components/client/ClientTable";
-import ClientModal from "@/components/client/ClientModal";
+import ClientTable from "@/components/ClientTable";
+import ClientModal from "@/components/modals/ClientModal";
 import useClient from "@/hooks/useClient";
 
 const ClientPage = (): React.JSX.Element => {

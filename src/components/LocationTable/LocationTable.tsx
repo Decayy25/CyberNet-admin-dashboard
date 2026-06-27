@@ -1,10 +1,9 @@
 import { Edit2, Trash2 } from "lucide-react";
 import { LocationArea } from "@/types/UI";
 
-
 interface LocationTableProps {
-  location: LocationArea[]; 
-  isLoading: boolean;       
+  location: LocationArea[];
+  isLoading: boolean;
   onEdit: (loc: LocationArea) => void;
   onDelete: (id: string) => void;
 }
@@ -16,6 +15,15 @@ const LocationTable = ({
   onDelete,
 }: LocationTableProps) => {
 
+  if (isLoading) {
+    return (
+      <div className="bg-[#111827] border border-gray-800 rounded-2xl overflow-hidden p-8">
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="bg-[#111827] border border-gray-800 rounded-2xl overflow-hidden">
       <div className="overflow-x-auto">

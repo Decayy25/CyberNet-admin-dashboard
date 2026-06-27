@@ -5,7 +5,6 @@ export enum PackageType {
   ENTERPRISE = "PAKET 50 Mbps",
 }
 
-
 export const PACKAGE_OPTIONS = Object.values(PackageType);
 
 export const PACKAGE_DETAILS = {
@@ -46,7 +45,6 @@ export const PACKAGE_DETAILS = {
   },
 } as const;
 
-
 export interface TypeContactForm {
   fullName: string;
   phoneNumber: string;
@@ -55,17 +53,22 @@ export interface TypeContactForm {
   packageId: PackageType;
 }
 
-
 export const isValidPackage = (pkg: string): pkg is PackageType => {
   return Object.values(PackageType).includes(pkg as PackageType);
 };
-
 
 export const getPackageName = (packageId: PackageType): string => {
   return PACKAGE_DETAILS[packageId]?.name || packageId;
 };
 
-
 export const getPackagePrice = (packageId: PackageType): number => {
   return PACKAGE_DETAILS[packageId]?.price || 0;
 };
+
+export interface PackageTypeProps {
+  paket: string;
+  price: number;
+  period: string;
+  features: string[];
+  isPopular: boolean;
+}

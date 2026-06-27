@@ -43,7 +43,7 @@ const LocationController = {
 
   async getLocationByArea(area: string) {
     try {
-      if (!area || area.trim().length === 0) {
+      if (!area || area.length === 0) {
         return {
           status: 400,
           success: false,
@@ -165,8 +165,18 @@ const LocationController = {
         };
       }
 
+      // Validasi input
+      if (!body.area || body.area.trim() === "") {
+        return {
+          status: 400,
+          success: false,
+          message: "Area tidak boleh kosong",
+          data: null,
+        };
+      }
+
       const data = await locationShema.validate({
-        area: normalizeAreaName(body.area),
+        area: normalizeAreaName(body.area.trim()),
         status: body.status,
       });
 
@@ -179,31 +189,6 @@ const LocationController = {
           status: 404,
           success: false,
           message: "Lokasi tidak ditemukan",
-          data: null,
-        };
-      }
-
-      if (currentDoc.area.toLowerCase() !== data.area.toLowerCase()) {
-        const isExactDuplicate = await checkExactDuplicate(data.area, region);
-
-        if (isExactDuplicate) {
-          return {
-            status: 400,
-            success: false,
-            message:
-              "Lokasi dengan nama ini sudah ada. Gunakan nama yang berbeda.",
-            data: null,
-          };
-        }
-      }
-
-      const fuzzyCheck = await checkFuzzyDuplicate(data.area, 0.8, region);
-
-      if (fuzzyCheck.isDuplicate) {
-        return {
-          status: 400,
-          success: false,
-          message: `Lokasi ini mirip dengan "${fuzzyCheck.similarArea}" yang sudah ada.`,
           data: null,
         };
       }
