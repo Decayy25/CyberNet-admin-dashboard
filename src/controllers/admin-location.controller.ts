@@ -1,5 +1,5 @@
 import { getRegion } from "@/utils/database";
-import { normalizeAreaName } from "@/services/location-predict.service";
+import { normalizeAreaName } from "@/controllers/location-predict.controller";
 import { locationForm, locationShema } from "@/models/location.models";
 import {
   checkExactDuplicate,

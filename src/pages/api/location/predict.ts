@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
   try {
-    const { default: predictAvailability} = await import("@/services/location-predict.service")
+    const { default: predictAvailability} = await import("@/controllers/location-predict.controller")
     const result = await predictAvailability(req.body);
 
     return res.status(200).json(result);

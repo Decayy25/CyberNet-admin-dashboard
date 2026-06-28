@@ -1,89 +1,14 @@
-import axios, { AxiosResponse } from "axios";
-import { LocationArea } from "@/types/UI";
-
-const API_BASE = "/api";
+import instance from '@/config/axios';
+import endpoint from "./endpoint.constant";
+import { typeLocation } from '@/types';
 
 const locationService = {
-
-  async getLocations(): Promise<AxiosResponse> {
-    try {
-      const response = await axios.get(`${API_BASE}/location`);
-      return response;
-    } catch (error) {
-      console.error("Error fetching locations:", error);
-      throw error;
-    }
-  },
-
-
-  async getLocationById(id: string): Promise<AxiosResponse> {
-    try {
-      const response = await axios.get(`${API_BASE}/location/${id}`);
-      return response;
-    } catch (error) {
-      console.error(`Error fetching location ${id}:`, error);
-      throw error;
-    }
-  },
-
-
-  async getLocationByArea(area: string): Promise<AxiosResponse> {
-    try {
-      const response = await axios.get(`${API_BASE}/location/area/${area}`);
-      return response;
-    } catch (error) {
-      console.error(`Error fetching location for area ${area}:`, error);
-      throw error;
-    }
-  },
-
-  async addLocation(payload: LocationArea): Promise<AxiosResponse> {
-    try {
-      const response = await axios.post(`${API_BASE}/location`, payload);
-      return response;
-    } catch (error) {
-      console.error("Error adding location:", error);
-      throw error;
-    }
-  },
-
-
-  async updateLocation(
-    id: string,
-    payload: Partial<LocationArea>,
-  ): Promise<AxiosResponse> {
-    try {
-      const response = await axios.put(`${API_BASE}/location/${id}`, payload);
-      return response;
-    } catch (error) {
-      console.error(`Error updating location ${id}:`, error);
-      throw error;
-    }
-  },
-
-
-  async deleteLocation(id: string): Promise<AxiosResponse> {
-    try {
-      const response = await axios.delete(`${API_BASE}/location/${id}`);
-      return response;
-    } catch (error) {
-      console.error(`Error deleting location ${id}:`, error);
-      throw error;
-    }
-  },
-
-
-  async predictLocation(area: string) {
-    try {
-      const response = await axios.post(`${API_BASE}/location/predict`, {
-        area,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error predicting location:", error);
-      throw error;
-    }
-  },
-};
+  getLocation: () => instance.get(`${endpoint.LOCATION}`),
+  getLocationByArea: (area: string) => instance.get(`${endpoint.LOCATION}/area/${area}`),
+  addLocation: (payload: typeLocation) => instance.post(`${endpoint.LOCATION}`, payload),
+  updateLocation: (payload: typeLocation, id: string) => instance.put(`${endpoint.LOCATION}/${id}`, payload),
+  removeLocation: (id: string) => instance.delete(`${endpoint.LOCATION}/${id}`),
+  predictLocation: (area: string) => instance.post(`${endpoint.LOCATION}/predict`, { area})
+}
 
 export default locationService;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import useMembership from "@/hooks/useMembership";
 import axios from "axios";
 import {
-  PACKAGE_OPTIONS,
   PackageType,
 } from "@/types/package";
 import { Send } from "lucide-react";
@@ -11,16 +11,17 @@ interface FormData {
   phoneNumber: string;
   email: string;
   address: string;
-  packageId: PackageType | "";
+  packageId: string
 }
 
 const RegistrationClientForm = (): React.JSX.Element => {
+  const { membership } = useMembership();
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     phoneNumber: "",
     email: "",
     address: "",
-    packageId: "PAKET 10 Mbps" as PackageType
+    packageId: ""
   });
 
   const [loading, setLoading] = useState(false);
@@ -85,7 +86,7 @@ const RegistrationClientForm = (): React.JSX.Element => {
           phoneNumber: "",
           email: "",
           address: "",
-          packageId: "PAKET 10 Mbps" as PackageType,
+          packageId: "",
         });
 
         // Reset after 3 seconds
@@ -161,9 +162,12 @@ const RegistrationClientForm = (): React.JSX.Element => {
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 cursor-pointer bg-white"
               >
-                {PACKAGE_OPTIONS.map((pkg) => (
-                  <option key={pkg} value={pkg}>
-                    {pkg}
+                <option value="">Pilih Paket</option>
+                {membership.map((item) => (
+                  <option 
+                    key={item._id} 
+                    value={item.paket}>
+                      {item.paket}
                   </option>
                 ))}
               </select>

@@ -46,7 +46,7 @@ const useMembership = () => {
 
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData((prev: []) => ({
+    setFormData((prev: any) => ({
       ...prev,
       [field]: value,
     }));
@@ -58,7 +58,7 @@ const useMembership = () => {
       setIsLoading(true);
       if (isEditMode) {
         // Update membership
-        await membershipService.updateMembership(isEditMode, formData);
+        await membershipService.updateMembership(formData, isEditMode);
       } else {
         // Create new membership
         await membershipService.addMembership(formData);

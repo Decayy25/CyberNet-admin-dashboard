@@ -1,4 +1,4 @@
-import sendEmail from "@/services/contact-email.service";
+import sendEmail from "@/controllers/contact-email.controller";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

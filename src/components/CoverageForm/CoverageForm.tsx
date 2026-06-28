@@ -37,11 +37,11 @@ const CoverageForm = () => {
 
       {data && (
         <Alert
-          area={data.area}
-          status={data.status}
-          confidence={data.confidence}
-          isVerified={data.isVerified}
-          matchedArea={data.matchedArea}
+          area={data.data.area}
+          status={data.data.status}
+          confidence={data.data.confidence}
+          isVerified={data.data.isVerified}
+          matchedArea={data.data.matchedArea}
         />
       )}
     </section>

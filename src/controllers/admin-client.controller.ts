@@ -90,7 +90,14 @@ const ClientController = {
         };
       }
 
-      const result = await clientMember.insertOne(data);
+      const result = await clientMember.insertOne({
+        fullName: body.fullName,
+        phoneNumber: body.phoneNumber,
+        email: body.email,
+        address: body.address,
+        packageId: body.packageId,
+        createdAt: new Date(),
+      });
 
       return {
         status: 201,

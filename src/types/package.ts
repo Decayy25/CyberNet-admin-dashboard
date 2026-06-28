@@ -50,7 +50,7 @@ export interface TypeContactForm {
   phoneNumber: string;
   email: string;
   address: string;
-  packageId: PackageType;
+  packageId: string;
 }
 
 export const isValidPackage = (pkg: string): pkg is PackageType => {

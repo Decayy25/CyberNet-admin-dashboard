@@ -18,12 +18,6 @@ export const useDashboard = (): UseDashboardReturn => {
       try {
         setIsLoading(true);
 
-        // Fetch locations
-        const locRes = await locationService.getLocations();
-        if (locRes?.data.data) {
-          setLocations(locRes.data.data);
-        }
-
         // Fetch client
         const clientRes = await clientService.getClient();
         if (clientRes?.data) {
@@ -37,6 +31,13 @@ export const useDashboard = (): UseDashboardReturn => {
         const memRes = await membershipService.getMembership();
         if (memRes?.data) {
           setMembership(memRes.data.data);
+        }
+
+
+        // Fetch locations
+        const locRes = await locationService.getLocation();
+        if (locRes?.data.data) {
+          setLocations(locRes.data.data);
         }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);

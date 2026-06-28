@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { isValidPackage, TypeContactForm } from "@/types/package";
+import { TypeContactForm } from "@/types/package";
 import { USER_EMAIL, USER_PASS } from "@/utils/environment";
 import ClientController from "@/controllers/admin-client.controller";
 import MembershipController from "@/controllers/admin-membership.controller";
@@ -30,6 +30,15 @@ export const isValidPhoneNumber = (phone: string): boolean => {
   return /^(\+62|0)[0-9]{9,12}$/.test(phone.replace(/\s/g, ""));
 };
 
+export const isValidPackage = async (packageId: string): Promise<boolean> => {
+  try {
+    const response = await MembershipController.getMembershipById(packageId);
+    return response.success && response.data !== null;
+  } catch {
+    return false;
+  }
+};
+
 const sendEmail = async (body: TypeContactForm) => {
   const { fullName, phoneNumber, email, address, packageId } = body;
 
@@ -47,11 +56,15 @@ const sendEmail = async (body: TypeContactForm) => {
     );
   }
 
-  if (!isValidPackage(packageId)) {
+  const packageResponse = await MembershipController.getMembership();
+
+  if (!packageResponse.success || !packageResponse.data) {
     throw new Error("Paket yang dipilih tidak valid!");
   }
 
-  // Validasi duplikasi data di database
+  const packageDetails = packageResponse.data;
+  const currentPackagePrice = packageDetails.price || 0;
+
   try {
     const clientMember = await getClientMember();
     const existingClient = await clientMember.findOne({
@@ -99,19 +112,6 @@ const sendEmail = async (body: TypeContactForm) => {
   };
 
   try {
-    const response = await MembershipController.getMembership();
-    const allPackages = response?.data || [];
-    const cleanPaketName = packageId.replace(/^PAKET\s+/i, "").trim();
-    const packageDetails = allPackages.find(
-      (item: any) => item.paket.toLowerCase() === cleanPaketName.toLowerCase(),
-    );
-
-    if (!packageDetails) {
-      throw new Error(`Paket "${packageId}" tidak ditemukan di database!`);
-    }
-
-    const currentPackagePrice = packageDetails.price || 0;
-
     const infoClient = await transporter.sendMail({
       from: `"${escape.fullName}" <${USER_EMAIL}>`,
       replyTo: email,
@@ -147,7 +147,7 @@ const sendEmail = async (body: TypeContactForm) => {
 
         <div style="background-color: #e8f4f8; padding: 20px; border-radius: 8px; border-left: 4px solid #0f172b; margin-bottom: 20px;">
           <h3 style="color: #0f172b; margin-top: 0;">📦 Paket yang Dipilih</h3>
-          <p style="margin: 0 0 10px 0;"><strong>${escape.packageId}</strong></p>
+          <p style="margin: 0 0 10px 0;"><strong>${packageDetails.paket}</strong></p> {/* ✅ Ganti ke nama paket */}
           <p style="margin: 0; color: #666;">Harga: Rp ${currentPackagePrice.toLocaleString("id-ID")}/bulan</p>
         </div>
 
@@ -162,12 +162,12 @@ const sendEmail = async (body: TypeContactForm) => {
     await transporter.sendMail({
       from: `CyberNet <${USER_EMAIL}>`,
       to: email,
-      subject: `Pendaftaran ${escape.packageId} Diterima - CyberNet`,
+      subject: `Pendaftaran ${packageDetails.paket} Diterima - CyberNet`,
       html: `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
         <h2>Terima kasih telah mendaftar! 🎉</h2>
         <p>Halo ${escape.fullName},</p>
-        <p>Kami telah menerima pendaftaran Anda untuk paket <strong>${escape.packageId}</strong>.</p>
+        <p>Kami telah menerima pendaftaran Anda untuk paket <strong>${packageDetails.paket}</strong>.</p>
         <p>Tim kami akan menghubungi Anda segera di nomor <strong>${escape.phoneNumber}</strong> untuk mengkonfirmasi dan mengatur instalasi.</p>
         <p>Jika ada pertanyaan, silakan hubungi kami di nomor admin kami.</p>
         <br>
