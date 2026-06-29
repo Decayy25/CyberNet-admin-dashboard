@@ -1,11 +1,12 @@
 import { getRegion } from "@/utils/database";
 import { normalizeAreaName } from "@/controllers/location-predict.controller";
-import { locationForm, locationShema } from "@/models/location.models";
+import { locationShema } from "@/models/location.models";
 import {
   checkExactDuplicate,
   checkFuzzyDuplicate,
 } from "@/utils/duplicate-checker";
 import { ObjectId } from "mongodb";
+import { typeLocation } from "@/types";
 
 const LocationController = {
   async getLocation() {
@@ -91,7 +92,7 @@ const LocationController = {
     }
   },
 
-  async addLocation(body: locationForm) {
+  async addLocation(body: typeLocation) {
     try {
       const region = await getRegion();
 
@@ -152,7 +153,7 @@ const LocationController = {
     }
   },
 
-  async updateLocation(id: string, body: locationForm) {
+  async updateLocation(id: string, body: typeLocation) {
     try {
       const region = await getRegion();
 
