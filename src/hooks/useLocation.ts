@@ -62,7 +62,7 @@ const useLocation = () => {
     try {
       if (isEditMode) {
         const { _id, ...cleanPayload } = rawPayload;
-        await axios.put(`/api/location/${selectedId}`, cleanPayload);
+        await axios.put(`/api/location/${_id}`, cleanPayload);
       } else {
         await axios.post("/api/location", rawPayload);
       }
