@@ -116,7 +116,7 @@ const useClient = (): UseClientReturn => {
       if (!confirmed) return;
       setIsLoading(true);
 
-      await clientService.deleteClient(id);
+      await clientService.removeClient(id);
       await fetchClient();
 
       alert("Client berhasil dihapus!");
