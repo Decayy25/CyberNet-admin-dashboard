@@ -62,7 +62,16 @@ const sendEmail = async (body: TypeContactForm) => {
     throw new Error("Paket yang dipilih tidak valid!");
   }
 
-  const packageDetails = packageResponse.data;
+
+  const allPackages = packageResponse.data;
+  const packageDetails = allPackages.find(
+    (pkg) => pkg.packageId || pkg.paket === packageId,
+  );
+
+  if (!packageDetails) {
+    throw new Error(`Paket dengan ID "${packageId}" tidak ditemukan!`);
+  }
+
   const currentPackagePrice = packageDetails.price || 0;
 
   try {
@@ -116,7 +125,7 @@ const sendEmail = async (body: TypeContactForm) => {
       from: `"${escape.fullName}" <${USER_EMAIL}>`,
       replyTo: email,
       to: USER_EMAIL,
-      subject: `Pendaftaran ${escape.packageId} dari ${escape.fullName}`,
+      subject: `Pendaftaran Paket ${escape.packageId} dari ${escape.fullName}`,
       html: `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
         <div style="background-color: #0f172b; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -147,7 +156,7 @@ const sendEmail = async (body: TypeContactForm) => {
 
         <div style="background-color: #e8f4f8; padding: 20px; border-radius: 8px; border-left: 4px solid #0f172b; margin-bottom: 20px;">
           <h3 style="color: #0f172b; margin-top: 0;">📦 Paket yang Dipilih</h3>
-          <p style="margin: 0 0 10px 0;"><strong>${packageDetails.paket}</strong></p> {/* ✅ Ganti ke nama paket */}
+          <p style="margin: 0 0 10px 0;"><strong>Paket ${packageDetails.paket}</strong></p>
           <p style="margin: 0; color: #666;">Harga: Rp ${currentPackagePrice.toLocaleString("id-ID")}/bulan</p>
         </div>
 
@@ -162,7 +171,7 @@ const sendEmail = async (body: TypeContactForm) => {
     await transporter.sendMail({
       from: `CyberNet <${USER_EMAIL}>`,
       to: email,
-      subject: `Pendaftaran ${packageDetails.paket} Diterima - CyberNet`,
+      subject: `Pendaftaran Paket ${packageDetails.paket} Diterima - CyberNet`,
       html: `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
         <h2>Terima kasih telah mendaftar! 🎉</h2>
