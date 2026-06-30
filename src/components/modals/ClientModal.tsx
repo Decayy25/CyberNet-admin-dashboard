@@ -1,6 +1,6 @@
 import { Client } from "@/types";
 import { X } from "lucide-react";
-import { PACKAGE_OPTIONS } from "@/types/package";
+import useMembership from "@/hooks/useMembership";
 
 interface ClientModalProps {
   isOpen: boolean;
@@ -21,6 +21,9 @@ export default function ClientModal({
   onSave,
   onClose,
 }: ClientModalProps): React.JSX.Element {
+  const { membership } = useMembership();
+
+
   if (!isOpen) return <></>;
 
   return (
@@ -107,9 +110,9 @@ export default function ClientModal({
               className="w-full bg-[#1F2937]/60 border border-gray-800 px-4 py-3 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50 cursor-pointer"
             >
               <option value="">-- Pilih Paket --</option>
-              {PACKAGE_OPTIONS.map((pkg) => (
-                <option key={pkg} value={pkg}>
-                  {pkg}
+              {membership.map((item) => (
+                <option key={item._id} value={item.paket}>
+                  {`PAKET ${item.paket}`}
                 </option>
               ))}
             </select>

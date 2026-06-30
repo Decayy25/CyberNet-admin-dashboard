@@ -1,3 +1,4 @@
+import { validateContactForm } from "@/validator/contact.validator";
 import nodemailer from "nodemailer";
 import { TypeContactForm } from "@/types/package";
 import { USER_EMAIL, USER_PASS } from "@/utils/environment";
@@ -22,14 +23,6 @@ export const escapeHtml = (text: string = ""): string => {
     .replace(/'/g, "&#039;");
 };
 
-export const isValidEmail = (email: string): boolean => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
-
-export const isValidPhoneNumber = (phone: string): boolean => {
-  return /^(\+62|0)[0-9]{9,12}$/.test(phone.replace(/\s/g, ""));
-};
-
 export const isValidPackage = async (packageId: string): Promise<boolean> => {
   try {
     const response = await MembershipController.getMembershipById(packageId);
@@ -46,15 +39,21 @@ const sendEmail = async (body: TypeContactForm) => {
     throw new Error("Semuanya wajib di isi!");
   }
 
-  if (!isValidEmail(email)) {
-    throw new Error("Format email salah! Gunakan format: nama@domain.com");
+  // Gunakan validator detail dari contact.validator
+  const formValidation = validateContactForm({
+    name: fullName,
+    email: email,
+    phone: phoneNumber,
+  });
+
+  if (!formValidation.isValid) {
+    const allErrors: string[] = [];
+    if (formValidation.errors.name) allErrors.push(...formValidation.errors.name);
+    if (formValidation.errors.email) allErrors.push(...formValidation.errors.email);
+    if (formValidation.errors.phone) allErrors.push(...formValidation.errors.phone);
+    throw new Error(allErrors.join("; "));
   }
 
-  if (!isValidPhoneNumber(phoneNumber)) {
-    throw new Error(
-      "Nomor telepon tidak valid! Gunakan format: 08xx atau +62xx",
-    );
-  }
 
   const packageResponse = await MembershipController.getMembership();
 

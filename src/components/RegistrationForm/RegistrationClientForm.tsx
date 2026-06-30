@@ -110,7 +110,7 @@ const RegistrationClientForm = (): React.JSX.Element => {
           Pendaftaran Pelanggan Baru
         </h2>
         <p className="text-center text-gray-500 mt-2">
-          Sebelum isi Form, harap cek coverage/area anda barang kali tidak
+          Sebelum isi form, harap cek coverage/area anda barang kali tidak
           terjangakau layanan kami.
         </p>
         <p className="text-center text-gray-500 mb-8">
