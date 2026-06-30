@@ -1,3 +1,4 @@
+import predictAvailability  from "@/controllers/location-predict.controller";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -9,7 +10,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
   try {
-    const { default: predictAvailability} = await import("@/controllers/location-predict.controller")
     const result = await predictAvailability(req.body);
 
     return res.status(200).json(result);

@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import useMembership from "@/hooks/useMembership";
 import axios from "axios";
-import {
-  PackageType,
-} from "@/types/package";
 import { Send } from "lucide-react";
 
 interface FormData {

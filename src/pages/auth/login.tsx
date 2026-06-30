@@ -47,7 +47,7 @@ export default function LoginPage(): React.JSX.Element {
             {/* INPUT IDENTIFIER */}
             <div className="space-y-2">
               <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Identifier (Username / Email)
+                Identifier
               </label>
               <Controller
                 name="identifier"

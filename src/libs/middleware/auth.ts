@@ -49,7 +49,6 @@ export const verifyToken = (req: NextApiRequest): AuthPayload | null => {
  */
 export const withAuth = (handler: any) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    // GET dan OPTIONS tidak perlu autentikasi
     if (["GET", "HEAD", "OPTIONS"].includes(req.method!)) {
       return handler(req, res);
     }
@@ -73,10 +72,7 @@ export const withAuth = (handler: any) => {
   };
 };
 
-/**
- * Middleware untuk protect route dengan admin access
- * Pastikan sudah menggunakan withAuth sebelumnya
- */
+
 export const withAdminAuth = (handler: any) => {
   return withAuth(async (req: NextApiRequest, res: NextApiResponse) => {
     const user = (req as any).user as AuthPayload | undefined;

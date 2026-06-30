@@ -19,30 +19,19 @@ Dokumentasi lengkap untuk migration data `packageId` dari format string (nama pa
 
 Database `clients` collection memiliki data dalam 2 format yang berbeda untuk field `packageId`:
 
-#### Format Lama (String - Nama Paket)
+#### Format Baru (String - Nama Paket)
 ```json
 {
   "_id": ObjectId("6a37e9f5db4f41cdd4454b0c"),
-  "fullName": "Moch. Rizqi Hermawan",
-  "phoneNumber": "089630831650",
-  "email": "mochrizqihermawan615@gmail.com",
-  "address": "Nagreg",
-  "packageId": "PAKET 50 Mbps",  // ❌ String nama paket
+  "fullName": "Ashbatten",
+  "phoneNumber": "08123456",
+  "email": "example@gmail.com",
+  "address": "Bandung",
+  "packageId": "50 Mbps", 
   "updatedAt": ISODate("2026-06-27T08:04:49.493Z")
 }
 ```
 
-#### Format Baru (ObjectId String)
-```json
-{
-  "_id": ObjectId("6a4086f1118c08769e7f98b3"),
-  "fullName": "RyuDecayy",
-  "phoneNumber": "08123456789",
-  "email": "ryudecay@gmail.com",
-  "address": "Nagreg",
-  "packageId": "6a2bc25bc0f2d4258e6f1f75"  // ✅ MongoDB ObjectId string
-}
-```
 
 ### Masalah yang Diakibatkan
 

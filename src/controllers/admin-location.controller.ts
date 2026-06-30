@@ -1,12 +1,13 @@
+import { normalizeAreaName } from "./location-predict.controller";
 import { getRegion } from "@/utils/database";
-import { normalizeAreaName } from "@/controllers/location-predict.controller";
 import { locationShema } from "@/models/location.models";
+import { ObjectId } from "mongodb";
+import { typeLocation } from "@/types";
 import {
   checkExactDuplicate,
   checkFuzzyDuplicate,
 } from "@/utils/duplicate-checker";
-import { ObjectId } from "mongodb";
-import { typeLocation } from "@/types";
+
 
 const LocationController = {
   async getLocation() {

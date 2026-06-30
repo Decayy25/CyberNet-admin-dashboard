@@ -1,4 +1,4 @@
-import natural from "natural";
+import { BayesClassifier } from "cybernet-ml";
 import { getRegion } from "@/utils/database";
 import LocationController from "@/controllers/admin-location.controller"
 
@@ -106,7 +106,7 @@ const predictAvailability = async (body: {
       return { status: "Belum ada data wilayah di database untuk dipelajari" };
     }
 
-    
+
     const normalizedInput: string = area.toLowerCase().trim();
     let isKnownArea = dataWilayah.find(
       (d) => d.area.toLowerCase().trim() === normalizedInput
@@ -122,7 +122,7 @@ const predictAvailability = async (body: {
     }
 
 
-    const classifier = new natural.BayesClassifier();
+    const classifier = new BayesClassifier();
 
 
     dataWilayah.forEach((item) => {
