@@ -164,7 +164,7 @@ const RegistrationClientForm = (): React.JSX.Element => {
                   <option 
                     key={item._id} 
                     value={item.paket}>
-                      {item.paket}
+                      {`PAKET ${item.paket}`}
                   </option>
                 ))}
               </select>
