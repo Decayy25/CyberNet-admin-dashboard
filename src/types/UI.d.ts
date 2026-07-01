@@ -1,3 +1,4 @@
+import { LocationAreaHook } from "@/types/UI";
 export interface MembershipPlan {
   _id: string;
   paket: string;
@@ -7,8 +8,14 @@ export interface MembershipPlan {
   isPopular: boolean;
 }
 
-export interface LocationArea {
+export interface LocationAreaHook {
   _id?: string;
+  area: string;
+  status: "tersedia" | "tidak tersedia" | string;
+}
+
+export interface LocationArea {
+  _id: string;
   area: string;
   status: "tersedia" | "tidak tersedia" | string;
 }
