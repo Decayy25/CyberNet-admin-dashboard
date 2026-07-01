@@ -1,10 +1,12 @@
 import { Fragment, useEffect } from "react";
-import MembershipTable from "@/components/MembershipTable";
-import PageHead from "@/components/PageHead";
-import useMembership from "@/hooks/useMembership";
+import MembershipTable from "@/components/views/MembershipTable";
+import PageHead from "@/components/views/PageHead";
+import Refresh from "@/components/views/refresh";
+import SearchBar from "@/components/views/SearchBar";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import Refresh from "@/components/refresh";
+
+import useMembership from "@/hooks/useMembership";
 
 const MembershipDashboard = (): React.JSX.Element => {
   const {
@@ -13,7 +15,9 @@ const MembershipDashboard = (): React.JSX.Element => {
     isModalOpen,
     isEditMode,
     formData,
+    searchQuery,
     fetchMembership,
+    handleSearch,
     handleDataChange,
     handleInputChange,
     handleSaveMembership,
@@ -74,8 +78,17 @@ const MembershipDashboard = (): React.JSX.Element => {
                 <p className="text-sm text-gray-400">
                   Kelola paket internet dan harga layanan Anda
                 </p>
+
+                <div className="mt-5">
+                  <SearchBar
+                    value={searchQuery}
+                    onSearch={handleSearch}
+                    isLoading={isLoading}
+                    placeholder="Cari paket..."
+                  />
+                </div>
               </div>
-              <div className="flex justify-between gap-2">
+              <div className="flex flex-wrap items-center justify-end gap-2 pt-20">
                 <Refresh onClick={handleDataChange} />
                 <button
                   onClick={openAddModal}

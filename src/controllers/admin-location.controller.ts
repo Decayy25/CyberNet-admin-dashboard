@@ -8,12 +8,24 @@ import {
   checkFuzzyDuplicate,
 } from "@/utils/duplicate-checker";
 
-
 const LocationController = {
-  async getLocation() {
+  async getLocation(query?: string) {
     try {
       const region = await getRegion();
-      const result = await region.find().toArray();
+      const keyword = query?.trim();
+
+      let filter = {};
+
+      if (keyword) {
+        const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escapedKeyword, "i");
+
+        filter = {
+          $or: [{ area: regex }, { areaSearchKey: regex }, { status: regex }],
+        };
+      }
+
+      const result = await region.find(filter).toArray();
 
       if (!result || result.length === 0) {
         return {

@@ -1,10 +1,11 @@
 import { Fragment } from "react";
-import LocationTable from "@/components/LocationTable";
-import PageHead from "@/components/PageHead";
+import LocationTable from "@/components/views/LocationTable";
+import PageHead from "@/components/views/PageHead";
 import useLocation from "@/hooks/useLocation";
+import Refresh from "@/components/views/refresh";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import Refresh from "@/components/refresh";
+import SearchBar from "@/components/views/SearchBar";
 
 const LocationDashboard = (): React.JSX.Element => {
   const {
@@ -14,11 +15,13 @@ const LocationDashboard = (): React.JSX.Element => {
     isEditMode,
     areaInput,
     statusInput,
+    searchQuery,
     setAreaInput,
     setStatusInput,
     openAddModal,
     openEditModal,
     closeModal,
+    handleSearch,
     handleDataChange,
     handleSaveLocation,
     handleDeleteLocation,
@@ -40,8 +43,17 @@ const LocationDashboard = (): React.JSX.Element => {
                 <p className="text-sm text-gray-400">
                   Kelola area jangkauan jaringan internet Wifi hotspot Anda
                 </p>
+                <div className="mt-5">
+                  <SearchBar
+                    value={searchQuery}
+                    onSearch={handleSearch}
+                    isLoading={isLoading}
+                    placeholder="Cari wilayah..."
+                  />
+                </div>
+
               </div>
-              <div className="flex justify-between gap-2">
+              <div className="flex justify-between gap-2 pt-20">
                 <Refresh onClick={handleDataChange} />
                 <button
                   onClick={openAddModal}

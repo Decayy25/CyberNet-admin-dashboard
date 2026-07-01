@@ -3,7 +3,10 @@ import endpoint from "./endpoint.constant";
 import { typeLocation } from "@/types";
 
 const locationService = {
-  getLocation: () => instance.get(`${endpoint.LOCATION}`),
+  getLocation: (params?: string) => {
+    const query = params? `?${params}` :"";
+    return instance.get(`${endpoint.LOCATION}${query}`)
+  } ,
   getLocationByArea: (area: string) =>
     instance.get(`${endpoint.LOCATION}/area/${area}`),
   addLocation: (payload: typeLocation) =>

@@ -1,20 +1,11 @@
 import React from "react";
-import { useRouter } from "next/router";
-import { Search } from "lucide-react";
+
 
 const Header = (): React.JSX.Element => {
-  const router = useRouter();
-
-  const getPlaceholder = () => {
-    if (router.pathname.includes("membership")) return "Cari paket internet...";
-    if (router.pathname.includes("location")) return "Cari area wilayah...";
-    return "Pencarian global...";
-  };
 
   return (
     <header className="fixed left-1 w-full top-0 h-16 bg-[#111827] backdrop-blur-md border-b  border-gray-800 flex items-center justify-between px-8 z-10">
       <div className="flex items-center gap-3 px-4 py-2 rounded-xl w-80 focus-within:border-blue-500/50 transition-all duration-200">
-        
       </div>
 
 

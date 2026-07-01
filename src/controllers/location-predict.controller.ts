@@ -1,6 +1,6 @@
-import { BayesClassifier } from "cybernet-ml";
+import { BayesClassifier } from "@/utils/bayes-classifier";
 import { getRegion } from "@/utils/database";
-import LocationController from "@/controllers/admin-location.controller"
+import LocationController from "@/controllers/admin-location.controller";
 
 interface LocationDoc {
   _id?: string;
@@ -25,7 +25,7 @@ const cleanTextSpecial = (text: string): string => {
     .replace(/^desa|^ds\.?/g, "ds")
     .replace(/^kelurahan|^kel\.?/g, "kel")
     .trim();
-}
+};
 
 const calculateLevenshteinDistance = (str1: string, str2: string): number => {
   const matrix: number[][] = [];
@@ -46,7 +46,7 @@ const calculateLevenshteinDistance = (str1: string, str2: string): number => {
         matrix[i][j] = Math.min(
           matrix[i - 1][j - 1] + 1, // substitution
           matrix[i][j - 1] + 1, // insertion
-          matrix[i - 1][j] + 1 // deletion
+          matrix[i - 1][j] + 1, // deletion
         );
       }
     }
@@ -54,7 +54,6 @@ const calculateLevenshteinDistance = (str1: string, str2: string): number => {
 
   return matrix[str2.length][str1.length];
 };
-
 
 const calculateSimilarity = (str1: string, str2: string): number => {
   const distance = calculateLevenshteinDistance(str1, str2);
@@ -94,7 +93,7 @@ const predictAvailability = async (body: {
   area: string;
 }): Promise<PredictionResponse> => {
   try {
-    const region = await getRegion()
+    const region = await getRegion();
     const { area } = body;
     if (!area) return { status: "Input tidak valid" };
 
@@ -106,24 +105,20 @@ const predictAvailability = async (body: {
       return { status: "Belum ada data wilayah di database untuk dipelajari" };
     }
 
-
     const normalizedInput: string = area.toLowerCase().trim();
     let isKnownArea = dataWilayah.find(
-      (d) => d.area.toLowerCase().trim() === normalizedInput
+      (d) => d.area.toLowerCase().trim() === normalizedInput,
     );
-
 
     let fuzzyMatchedArea: LocationDoc | null = null;
     if (!isKnownArea) {
-      fuzzyMatchedArea = findSimilarArea(area, dataWilayah, 0.70);
+      fuzzyMatchedArea = findSimilarArea(area, dataWilayah, 0.7);
       if (fuzzyMatchedArea) {
         isKnownArea = fuzzyMatchedArea;
       }
     }
 
-
     const classifier = new BayesClassifier();
-
 
     dataWilayah.forEach((item) => {
       if (item.area && item.status) {
@@ -131,23 +126,19 @@ const predictAvailability = async (body: {
       }
     });
 
-
     classifier.train();
-
 
     const label: string = classifier.classify(normalizedInput);
     const classifications = classifier.getClassifications(normalizedInput);
 
-
     const confidenceScore: number =
-      classifications.find((c) => c.label === label)?.value || 0;
-
+      classifications.find((classification) => classification.label === label)
+        ?.value || 0;
 
     const threshold = 0.85;
     let finalStatus = "Belum Tersedia";
     let verified = false;
     let matchedAreaName: string | undefined = undefined;
-
 
     if (isKnownArea) {
       verified = true;
@@ -183,17 +174,14 @@ const predictAvailability = async (body: {
   }
 };
 
-
 export const normalizeAreaName = (area: string): string => {
-  return (
-    area
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, " ")
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ")
-  );
+  return area
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
 
 export default predictAvailability;

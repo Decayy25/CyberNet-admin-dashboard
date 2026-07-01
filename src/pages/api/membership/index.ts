@@ -4,7 +4,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
-      const result = await MembershipController.getMembership();
+      const searchQuery =
+        typeof req.query.search === "string" ? req.query.search : undefined;
+      const result = await MembershipController.getMembership(searchQuery);
 
       return res.status(200).json(result);
     }

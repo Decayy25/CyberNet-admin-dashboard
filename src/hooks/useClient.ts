@@ -1,13 +1,18 @@
 import clientService from "@/services/client.service";
 import { Client } from "@/types";
 import { UseClientReturn } from "@/types/UI";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 
 const useClient = (): UseClientReturn => {
+  const router = useRouter();
+  const currentSearch =
+    typeof router.query.search === "string" ? router.query.search : "";
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<string>("");
   const [refreshKey, setRefreshKey] = useState(0);
+  const [searchQuery, setSearchQuery] = useState<string>(currentSearch);
   const [client, setClient] = useState<Client[]>([]);
 
   // Initial form data
@@ -27,8 +32,12 @@ const useClient = (): UseClientReturn => {
   const fetchClient = useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await clientService.getClient();
-      if (res?.data.data && Array.isArray(res.data.data)) {
+      const params = currentSearch
+        ? `search=${encodeURIComponent(currentSearch)}`
+        : "";
+      const res = await clientService.getClient(params);
+
+      if (res?.data?.data && Array.isArray(res.data.data)) {
         setClient(res.data.data);
       } else {
         setClient([]);
@@ -39,14 +48,42 @@ const useClient = (): UseClientReturn => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [currentSearch]);
 
-  // Fetch on mount & when refreshKey changes
   useEffect(() => {
     (async () => {
-      await fetchClient();
+      if (searchQuery !== currentSearch) {
+        setSearchQuery(currentSearch);
+      }
+    })();
+  }, [searchQuery, currentSearch]);
+
+  useEffect(() => {
+    (async () => {
+      const timer = window.setTimeout(() => {
+        void fetchClient();
+      }, 0);
+
+      return () => window.clearTimeout(timer);
     })();
   }, [fetchClient, refreshKey]);
+
+  const handleSearch = useCallback(
+    (query: string) => {
+      const normalized = query.trim();
+      setSearchQuery(normalized);
+
+      void router.replace(
+        {
+          pathname: router.pathname,
+          query: normalized ? { search: normalized } : {},
+        },
+        undefined,
+        { shallow: true },
+      );
+    },
+    [router],
+  );
 
   // Handle input change
   const handleInputChange = (field: string, value: any) => {
@@ -160,6 +197,8 @@ const useClient = (): UseClientReturn => {
     isModalOpen,
     isEditMode,
     formData,
+    searchQuery,
+    handleSearch,
     handleInputChange,
     handleSaveClient,
     handleDeleteClient,

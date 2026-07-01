@@ -4,10 +4,27 @@ import { ObjectId } from "mongodb";
 import { typeMembership } from "@/types";
 
 const MembershipController = {
-  async getMembership() {
+  async getMembership(query?: string) {
     try {
       const membership = await getMembership();
-      const result = await membership.find().toArray();
+      const keyword = query?.trim();
+
+      let filter = {};
+
+      if (keyword) {
+        const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escapedKeyword, "i");
+
+        filter = {
+          $or: [
+            { paket: regex },
+            { period: regex },
+            { features: { $elemMatch: { $regex: regex } } },
+          ],
+        };
+      }
+
+      const result = await membership.find(filter).toArray();
 
       return {
         status: 200,

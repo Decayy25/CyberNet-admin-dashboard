@@ -1,11 +1,11 @@
 import React, { Fragment } from "react";
-import PageHead from "@/components/PageHead";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
+import PageHead from "@/components/views/PageHead";
 import { MapPin, CreditCard, Users, TrendingUp } from "lucide-react";
-import Refresh from "@/components/refresh";
+import Refresh from "@/components/views/refresh";
 import { useDashboard } from "@/hooks/useDashboard";
 import { KPICardProps} from "@/types/UI";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
 
 
 

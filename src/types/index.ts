@@ -18,7 +18,7 @@ export type typeMembership = {
   paket: string;
   price: number;
   period: "bulan" | "tahun";
-  features: [];
+  features: string[];
   isPopular?: boolean;
 };
 

@@ -1,14 +1,25 @@
+import { useRouter } from "next/router";
 import { MembershipPlan } from "@/types/UI";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import membershipService from "@/services/membership.service";
+import { typeMembership } from "@/types";
+
+interface MembershipFormData extends typeMembership {
+  isPopular: boolean;
+}
 
 const useMembership = () => {
+  const router = useRouter();
+  const currentSearch =
+    typeof router.query.search === "string" ? router.query.search : "";
+
   const [membership, setMembership] = useState<MembershipPlan[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [formData, setFormData] = useState<any>({
+  const [searchQuery, setSearchQuery] = useState<string>(currentSearch);
+  const [formData, setFormData] = useState<MembershipFormData>({
     paket: "",
     price: 0,
     period: "bulan",
@@ -16,11 +27,15 @@ const useMembership = () => {
     isPopular: false,
   });
 
-
   const fetchMembership = useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await membershipService.getMembership();
+
+      const params = currentSearch
+        ? `search=${encodeURIComponent(currentSearch)}`
+        : "";
+      const res = await membershipService.getMembership(params);
+
       if (res?.data?.data && Array.isArray(res.data.data)) {
         setMembership(res.data.data);
       } else {
@@ -32,35 +47,59 @@ const useMembership = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
-
+  }, [currentSearch]);
 
   useEffect(() => {
     (async () => {
-      await fetchMembership();
+      if (searchQuery !== currentSearch) {
+        setSearchQuery(currentSearch);
+      }
     })();
+  }, [currentSearch, searchQuery]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      void fetchMembership();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, [fetchMembership, refreshKey]);
 
+  const handleSearch = useCallback(
+    (query: string) => {
+      const normalized = query.trim();
+      setSearchQuery(normalized);
+
+      void router.replace(
+        {
+          pathname: router.pathname,
+          query: normalized ? { search: normalized } : {},
+        },
+        undefined,
+        { shallow: true },
+      );
+    },
+    [router],
+  );
 
   const handleDataChange = () => setRefreshKey((prev) => prev + 1);
 
-
-  const handleInputChange = (field: string, value: any) => {
-    setFormData((prev: any) => ({
+  const handleInputChange = (
+    field: keyof MembershipFormData,
+    value: string | number | boolean | string[],
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-
   const handleSaveMembership = async () => {
     try {
       setIsLoading(true);
       if (isEditMode) {
-        // Update membership
         await membershipService.updateMembership(formData, isEditMode);
       } else {
-        // Create new membership
         await membershipService.addMembership(formData);
       }
       await fetchMembership();
@@ -74,7 +113,6 @@ const useMembership = () => {
     }
   };
 
-  // Handle delete
   const handleDeleteMembership = async (id: string) => {
     try {
       setIsLoading(true);
@@ -89,33 +127,29 @@ const useMembership = () => {
     }
   };
 
-  // Open modal for create
   const openAddModal = () => {
     setIsEditMode("");
     resetForm();
     setIsModalOpen(true);
   };
 
-  // Open modal for edit
   const openEditModal = (plan: MembershipPlan) => {
     setIsEditMode(plan._id);
     setFormData({
       paket: plan.paket,
       price: plan.price,
-      period: plan.period,
+      period: plan.period === "tahun" ? "tahun" : "bulan",
       features: plan.features || [],
       isPopular: plan.isPopular || false,
     });
     setIsModalOpen(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     resetForm();
   };
 
-  // Reset form
   const resetForm = () => {
     setIsEditMode("");
     setFormData({
@@ -133,7 +167,9 @@ const useMembership = () => {
     isEditMode,
     isModalOpen,
     formData,
+    searchQuery,
     fetchMembership,
+    handleSearch,
     handleDataChange,
     handleInputChange,
     handleSaveMembership,

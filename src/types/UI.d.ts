@@ -47,7 +47,7 @@ export interface typeMembership {
   paket: string;
   price: number;
   period: "bulan" | "tahun";
-  features: [];
+  features: string[];
   isPopular?: boolean;
 }
 
@@ -91,6 +91,8 @@ export interface UseClientReturn {
   isModalOpen: boolean;
   isEditMode: string;
   formData: Client;
+  searchQuery: string;
+  handleSearch: (query: string) => void;
   handleInputChange: (field: string, value: string) => void;
   handleSaveClient: () => Promise<void>;
   handleDeleteClient: (id: string) => Promise<void>;

@@ -1,11 +1,12 @@
 import { Fragment } from "react";
-import PageHead from "@/components/PageHead";
-import Header from "@/components/Header";
-import Refresh from "@/components/refresh";
-import Sidebar from "@/components/Sidebar";
-import ClientTable from "@/components/ClientTable";
-import ClientModal from "@/components/modals/ClientModal";
+import PageHead from "@/components/views/PageHead";
+import Refresh from "@/components/views/refresh";
+import ClientTable from "@/components/views/ClientTable";
+import ClientModal from "@/components/views/modals/ClientModal";
 import useClient from "@/hooks/useClient";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import SearchBar from "@/components/views/SearchBar";
 
 const ClientPage = (): React.JSX.Element => {
   const {
@@ -14,6 +15,8 @@ const ClientPage = (): React.JSX.Element => {
     isModalOpen,
     isEditMode,
     formData,
+    searchQuery,
+    handleSearch,
     handleInputChange,
     handleSaveClient,
     handleDeleteClient,
@@ -39,8 +42,17 @@ const ClientPage = (): React.JSX.Element => {
                 <p className="text-gray-400 mt-2">
                   Kelola data pelanggan dan langganan mereka
                 </p>
+
+                <div className="mt-5">
+                  <SearchBar
+                    value={searchQuery}
+                    onSearch={handleSearch}
+                    isLoading={isLoading}
+                    placeholder="Cari client..."
+                  />
+                </div>
               </div>
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end gap-2 pt-20">
                 <Refresh onClick={handleRefreshClient} />
                 <button
                   onClick={openAddModal}

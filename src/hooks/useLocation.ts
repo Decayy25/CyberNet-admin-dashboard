@@ -1,8 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { LocationArea } from "@/types/UI";
+import locationService from "@/services/location.service";
+import { useRouter } from "next/router";
 
 const useLocation = () => {
+  const router = useRouter();
+  const currentSearch =
+    typeof router.query.search === "string" ? router.query.search : "";
   const [locations, setLocations] = useState<LocationArea[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -11,16 +16,20 @@ const useLocation = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
   const [areaInput, setAreaInput] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>(currentSearch);
   const [statusInput, setStatusInput] = useState<string>("tersedia");
   const [refreshKey, setRefreshKey] = useState(0);
-
 
   const fetchLocations = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get("/api/location");
-      if (response.data?.data && Array.isArray(response.data.data)) {
-        setLocations(response.data.data);
+      const params = currentSearch
+        ? `search=${encodeURIComponent(currentSearch)}`
+        : "";
+
+      const res = await locationService.getLocation(params);
+      if (res?.data?.data && Array.isArray(res.data.data)) {
+        setLocations(res.data.data);
       } else {
         setLocations([]);
       }
@@ -30,9 +39,36 @@ const useLocation = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [currentSearch]);
+
+  const handleSearch = useCallback(
+    (query: string) => {
+      const normalized = query.trim();
+      setSearchQuery(normalized);
+
+      void router.replace(
+        {
+          pathname: router.pathname,
+          query: normalized ? { search: normalized } : {},
+        },
+        undefined,
+        {
+          shallow: true,
+        },
+      );
+    },
+    [router],
+  );
 
   const isMounted = useRef(true);
+
+  useEffect(() => {
+    (async () => {
+      if (searchQuery !== currentSearch) {
+        setSearchQuery(currentSearch);
+      }
+    })();
+  }, [currentSearch, searchQuery]);
 
   useEffect(() => {
     const initFetch = async () => {
@@ -43,8 +79,13 @@ const useLocation = () => {
 
     initFetch();
 
+    const timer = window.setTimeout(() => {
+      void fetchLocations();
+    }, 0);
+
     return () => {
       isMounted.current = false;
+      window.clearTimeout(timer);
     };
   }, [fetchLocations, refreshKey]);
 
@@ -62,7 +103,7 @@ const useLocation = () => {
     try {
       if (isEditMode) {
         const { _id, ...cleanPayload } = rawPayload;
-        await axios.put(`/api/location/${_id}`, cleanPayload);
+        await locationService.updateLocation( _id, cleanPayload)
       } else {
         await axios.post("/api/location", rawPayload);
       }
@@ -70,7 +111,7 @@ const useLocation = () => {
       closeModal();
       await fetchLocations();
     } catch (error: any) {
-      alert(error?.response?.data?.message || "Terjadi kesalahan pada sistem.");
+      alert(error?.res?.data?.message || "Terjadi kesalahan pada sistem.");
     }
   };
 
@@ -82,7 +123,7 @@ const useLocation = () => {
       await fetchLocations();
     } catch (error: any) {
       console.error("Gagal menghapus lokasi:", error);
-      alert(error?.response?.data?.message || "Gagal menghapus data.");
+      alert(error?.res?.data?.message || "Gagal menghapus data.");
     }
   };
 
@@ -115,11 +156,13 @@ const useLocation = () => {
     isEditMode,
     areaInput,
     statusInput,
+    searchQuery,
     setAreaInput,
     setStatusInput,
     openAddModal,
     openEditModal,
     closeModal,
+    handleSearch,
     handleDataChange,
     handleSaveLocation,
     handleDeleteLocation,

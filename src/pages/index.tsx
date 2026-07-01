@@ -1,7 +1,7 @@
-import CoverageForm from "@/components/CoverageForm";
-import PageHead from "@/components/PageHead"
-import RegistrationClientForm from "@/components/RegistrationForm"
-import MembershipSection from "@/components/MembershipSection"
+import CoverageForm from "@/components/views/CoverageForm";
+import PageHead from "@/components/views/PageHead"
+import RegistrationClientForm from "@/components/views/RegistrationForm"
+import MembershipSection from "@/components/views/MembershipSection"
 
 export default function Home() {
   return (
