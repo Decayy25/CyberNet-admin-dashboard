@@ -1,12 +1,12 @@
 import { Fragment } from "react";
-import PageHead from "@/components/views/PageHead";
-import Refresh from "@/components/views/refresh";
+import PageHead from "@/components/common/PageHead";
+import Refresh from "@/components/ui/refresh";
 import ClientTable from "@/components/views/ClientTable";
-import ClientModal from "@/components/views/modals/ClientModal";
+import ClientModal from "@/components/modals/ClientModal";
 import useClient from "@/hooks/useClient";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
-import SearchBar from "@/components/views/SearchBar";
+import Header from "@/components/common/Header";
+import Sidebar from "@/components/common/Sidebar";
+import SearchBar from "@/components/ui/SearchBar";
 
 const ClientPage = (): React.JSX.Element => {
   const {

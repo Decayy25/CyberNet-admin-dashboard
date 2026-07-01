@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useMembership from "@/hooks/useMembership";
 import axios from "axios";
 import { Send } from "lucide-react";
+import contactService from "@/services/contact.service";
 
 interface FormData {
   fullName: string;
@@ -68,12 +69,12 @@ const RegistrationClientForm = (): React.JSX.Element => {
         return;
       }
 
-      const response = await axios.post("/api/contact", {
+      const response = await contactService.addClientWithForm({
         fullName: formData.fullName,
         phoneNumber: formData.phoneNumber,
         email: formData.email,
         address: formData.address,
-        packageId: formData.packageId,
+        packageId: formData.packageId
       });
 
       if (response.data.success) {
@@ -160,9 +161,9 @@ const RegistrationClientForm = (): React.JSX.Element => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 cursor-pointer bg-white"
               >
                 <option value="">Pilih Paket</option>
-                {membership.map((item) => (
+                {membership.map((item, idx) => (
                   <option 
-                    key={item._id} 
+                    key={idx} 
                     value={item.paket}>
                       {`PAKET ${item.paket}`}
                   </option>

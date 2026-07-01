@@ -10,8 +10,9 @@ export type TypeLoginAdmin = {
 };
 
 export type typeLocation = {
+  _id: string;
   area: string;
-  status: "tersedia" | "tidak_tersedia";
+  status: "tersedia" | "tidak_tersedia" | string;
 };
 
 export type typeMembership = {

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import axios from "axios";
 import { LocationArea } from "@/types/UI";
 import locationService from "@/services/location.service";
 import { useRouter } from "next/router";
@@ -71,23 +70,23 @@ const useLocation = () => {
   }, [currentSearch, searchQuery]);
 
   useEffect(() => {
-    const initFetch = async () => {
-      if (isMounted.current) {
-        await fetchLocations();
-      }
-    };
-
-    initFetch();
-
     const timer = window.setTimeout(() => {
-      void fetchLocations();
+      if (isMounted.current) {
+        void fetchLocations();
+      }
     }, 0);
 
     return () => {
-      isMounted.current = false;
       window.clearTimeout(timer);
     };
   }, [fetchLocations, refreshKey]);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const handleDataChange = () => setRefreshKey((prev) => prev + 1);
 
@@ -95,7 +94,7 @@ const useLocation = () => {
     e.preventDefault();
 
     const rawPayload: LocationArea = {
-      _id: isEditMode ? selectedId : "",
+      ...(isEditMode && { _id: selectedId }),
       area: areaInput,
       status: statusInput,
     };
@@ -103,9 +102,9 @@ const useLocation = () => {
     try {
       if (isEditMode) {
         const { _id, ...cleanPayload } = rawPayload;
-        await locationService.updateLocation( _id, cleanPayload)
+        await locationService.updateLocation(cleanPayload, _id || selectedId || "")
       } else {
-        await axios.post("/api/location", rawPayload);
+        await locationService.addLocation(rawPayload)
       }
 
       closeModal();
@@ -118,7 +117,7 @@ const useLocation = () => {
   const handleDeleteLocation = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus wilayah ini?")) return;
     try {
-      await axios.delete(`/api/location/${id}`);
+      locationService.removeLocation(id);
       alert("Wilayah berhasil dihapus!");
       await fetchLocations();
     } catch (error: any) {

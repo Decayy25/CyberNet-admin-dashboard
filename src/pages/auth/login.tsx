@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Controller } from "react-hook-form";
 import { HardDrive, Lock, User, Eye, EyeOff } from "lucide-react";
-import PageHead from "@/components/views/PageHead";
+import PageHead from "@/components/common/PageHead";
 import useLogin from "@/hooks/useLogin";
 
 export default function LoginPage(): React.JSX.Element {

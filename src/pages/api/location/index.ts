@@ -7,7 +7,9 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "GET": {
-      const result = await LocationController.getLocation();
+      const searchQuery =
+        typeof req.query.search === "string" ? req.query.search : undefined;
+      const result = await LocationController.getLocation(searchQuery);
 
       return res.status(200).json(result);
     }

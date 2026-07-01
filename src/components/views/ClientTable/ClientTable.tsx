@@ -91,7 +91,7 @@ const ClientTable = ({
                   {/* Paket */}
                   <td className="px-6 py-4">
                     <span className="px-3 py-1 bg-blue-500/10 text-blue-400 text-sm rounded-full">
-                      {`PAKET ${item.packageId}`}
+                      {item.packageId}
                     </span>
                   </td>
 

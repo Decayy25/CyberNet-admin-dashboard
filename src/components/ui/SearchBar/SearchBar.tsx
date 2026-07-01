@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface SearchBarProps {
   onSearch?: (query: string) => void | Promise<void>;
@@ -25,12 +25,22 @@ const SearchBar = ({
 }: SearchBarProps) => {
   const [query, setQuery] = useState(value ?? defaultValue);
 
+  useEffect(() => {
+    (async () => {
+      if (value !== undefined) {
+        setQuery(value);
+      }
+    })();
+  }, [value]);
+
   const handleSearch = async () => {
     const trimmed = query.trim();
     onChange?.(trimmed);
 
     if (isLoading) return;
     await onSearch?.(trimmed);
+    setQuery("");
+    onChange?.("");
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +76,7 @@ const SearchBar = ({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         disabled={isLoading}
-        className={`w-full min-w-[180px] bg-transparent pl-2 text-sm font-medium text-white outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-60 ${inputClassName}`}
+        className={`w-full min-w-45 bg-transparent pl-2 text-sm font-medium text-white outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-60 ${inputClassName}`}
         placeholder={placeholder}
         id="search-input"
       />
@@ -75,7 +85,7 @@ const SearchBar = ({
         type="button"
         onClick={() => void handleSearch()}
         disabled={isLoading}
-        className={`ml-2 flex min-w-[88px] items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-600/50 ${buttonClassName}`}
+        className={`ml-2 flex min-w-22 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-600/50 ${buttonClassName}`}
       >
         {isLoading ? (
           <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500" />

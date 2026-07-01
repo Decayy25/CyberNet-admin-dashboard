@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Alert from "@/components/views/Alert";
+import Alert from "@/components/ui/Alert";
 import useCoverage  from "@/hooks/useCoverage";
 
 const CoverageForm = () => {

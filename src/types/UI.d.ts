@@ -8,23 +8,11 @@ export interface MembershipPlan {
 }
 
 export interface LocationArea {
-  _id: string;
+  _id?: string;
   area: string;
   status: "tersedia" | "tidak tersedia" | string;
 }
 
-export interface TypeContactForm {
-  fullName: string;
-  phoneNumber: string;
-  email: string;
-  address: string;
-  message: string;
-  packageId:
-    | "PAKET 10 Mbps"
-    | "PAKET 20 Mbps"
-    | "PAKET 30 Mbps"
-    | "PAKET 50 Mbps";
-}
 
 export interface TypeEmail {
   email: string;
@@ -38,7 +26,7 @@ export interface TypeLoginAdmin {
 }
 
 export interface typeLocation {
-  _id?: string;
+  _id: string;
   area: string;
   status: "tersedia" | "tidak_tersedia";
 }

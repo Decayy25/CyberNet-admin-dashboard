@@ -1,18 +1,20 @@
 import instance from "@/config/axios";
 import endpoint from "./endpoint.constant";
-import { typeLocation } from "@/types";
+import { LocationArea } from "@/types/UI";
 
 const locationService = {
   getLocation: (params?: string) => {
-    const query = params? `?${params}` :"";
-    return instance.get(`${endpoint.LOCATION}${query}`)
-  } ,
+    const query = params ? `?${params}` : "";
+    return instance.get(`${endpoint.LOCATION}${query}`);
+  },
   getLocationByArea: (area: string) =>
     instance.get(`${endpoint.LOCATION}/area/${area}`),
-  addLocation: (payload: typeLocation) =>
+  addLocation: (payload: LocationArea) =>
     instance.post(`${endpoint.LOCATION}`, payload),
-  updateLocation: (payload: typeLocation, id: string) =>
+
+  updateLocation: (payload: Omit<LocationArea, "_id">, id: string) =>
     instance.put(`${endpoint.LOCATION}/${id}`, payload),
+
   removeLocation: (id: string) => instance.delete(`${endpoint.LOCATION}/${id}`),
   predictLocation: (area: string) =>
     instance.post(`${endpoint.LOCATION}/predict`, { area }),

@@ -5,14 +5,30 @@ import { ObjectId } from "mongodb";
 import { TypeContactForm } from "@/types/package";
 
 const ClientController = {
-  async getClient() {
+  async getClient(query?: string) {
     try {
       const clientMember = await getClientMember();
-      const result = await clientMember.find().toArray();
+      const keyword = query?.trim();
 
-      if (!result || result.length === 0) {
+      let filter = {};
+
+      if(keyword) {
+        const escapekeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escapekeyword, "i");
+
+        filter = {
+          $or: [{fullName: regex}, {email: regex}, {phoneNumber: regex}, {address: regex}, {packageId: regex}],
+        };
+      }
+
+      const result = await clientMember.find(filter).toArray();
+
+      if(!result || result.length === 0) {
         return {
-          message: "Tidak ada data client",
+          status: 200,
+          success: true,
+          message: "Belum ada data client",
+          data: [],
         };
       }
 

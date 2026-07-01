@@ -1,5 +1,5 @@
 import CoverageForm from "@/components/views/CoverageForm";
-import PageHead from "@/components/views/PageHead"
+import PageHead from "@/components/common/PageHead"
 import RegistrationClientForm from "@/components/views/RegistrationForm"
 import MembershipSection from "@/components/views/MembershipSection"
 

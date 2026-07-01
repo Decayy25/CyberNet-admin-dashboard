@@ -1,11 +1,11 @@
 import { Fragment } from "react";
 import LocationTable from "@/components/views/LocationTable";
-import PageHead from "@/components/views/PageHead";
+import PageHead from "@/components/common/PageHead";
 import useLocation from "@/hooks/useLocation";
-import Refresh from "@/components/views/refresh";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
-import SearchBar from "@/components/views/SearchBar";
+import Refresh from "@/components/ui/refresh";
+import Header from "@/components/common/Header";
+import Sidebar from "@/components/common/Sidebar";
+import SearchBar from "@/components/ui/SearchBar";
 
 const LocationDashboard = (): React.JSX.Element => {
   const {

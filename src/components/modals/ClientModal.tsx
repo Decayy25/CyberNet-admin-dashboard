@@ -112,7 +112,7 @@ export default function ClientModal({
               <option value="">-- Pilih Paket --</option>
               {membership.map((item) => (
                 <option key={item._id} value={item.paket}>
-                  {`PAKET ${item.paket}`}
+                  {item.paket}
                 </option>
               ))}
             </select>

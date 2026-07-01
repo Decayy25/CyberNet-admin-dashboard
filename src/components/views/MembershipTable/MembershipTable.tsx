@@ -50,9 +50,9 @@ const MembershipTable = ({
             </thead>
             <tbody className="divide-y divide-gray-800/60 text-sm text-gray-300">
               {membership && membership.length > 0 ? (
-                membership.map((plan) => (
+                membership.map((plan, idx) => (
                   <tr
-                    key={plan._id}
+                    key={idx}
                     className="hover:bg-[#1F2937]/20 transition-colors"
                   >
                     <td className="px-6 py-4 font-medium text-white">

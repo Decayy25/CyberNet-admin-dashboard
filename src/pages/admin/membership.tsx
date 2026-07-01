@@ -1,12 +1,12 @@
 import { Fragment, useEffect } from "react";
-import MembershipTable from "@/components/views/MembershipTable";
-import PageHead from "@/components/views/PageHead";
-import Refresh from "@/components/views/refresh";
-import SearchBar from "@/components/views/SearchBar";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
-
 import useMembership from "@/hooks/useMembership";
+import MembershipTable from "@/components/views/MembershipTable";
+import PageHead from "@/components/common/PageHead";
+import Refresh from "@/components/ui/refresh";
+import SearchBar from "@/components/ui/SearchBar";
+import Header from "@/components/common/Header";
+import Sidebar from "@/components/common/Sidebar";
+
 
 const MembershipDashboard = (): React.JSX.Element => {
   const {
