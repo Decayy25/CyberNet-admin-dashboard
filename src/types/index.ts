@@ -9,11 +9,7 @@ export type TypeLoginAdmin = {
   password: string;
 };
 
-export type typeLocation = {
-  _id?: string;
-  area: string;
-  status: "tersedia" | "tidak_tersedia" | string;
-};
+export * from "./location";
 
 export type typeMembership = {
   paket: string;

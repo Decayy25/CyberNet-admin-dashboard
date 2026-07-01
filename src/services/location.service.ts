@@ -1,6 +1,6 @@
 import instance from "@/config/axios";
 import endpoint from "./endpoint.constant";
-import { LocationAreaHook } from "@/types/UI";
+import { LocationInput } from "@/types/location";
 
 const locationService = {
   getLocation: (params?: string) => {
@@ -9,10 +9,10 @@ const locationService = {
   },
   getLocationByArea: (area: string) =>
     instance.get(`${endpoint.LOCATION}/area/${area}`),
-  addLocation: (payload: LocationAreaHook) =>
+  addLocation: (payload: LocationInput) =>
     instance.post(`${endpoint.LOCATION}`, payload),
 
-  updateLocation: (payload: Omit<LocationAreaHook, "_id">, id: string) =>
+  updateLocation: (payload: LocationInput, id: string) =>
     instance.put(`${endpoint.LOCATION}/${id}`, payload),
 
   removeLocation: (id: string) => instance.delete(`${endpoint.LOCATION}/${id}`),

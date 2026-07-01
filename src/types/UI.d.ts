@@ -1,4 +1,5 @@
-import { LocationAreaHook } from "@/types/UI";
+import { Location } from "@/types/location";
+
 export interface MembershipPlan {
   _id: string;
   paket: string;
@@ -7,19 +8,6 @@ export interface MembershipPlan {
   features: string[];
   isPopular: boolean;
 }
-
-export interface LocationAreaHook {
-  _id?: string;
-  area: string;
-  status: "tersedia" | "tidak tersedia" | string;
-}
-
-export interface LocationArea {
-  _id: string;
-  area: string;
-  status: "tersedia" | "tidak tersedia" | string;
-}
-
 
 export interface TypeEmail {
   email: string;
@@ -30,12 +18,6 @@ export interface TypeEmail {
 export interface TypeLoginAdmin {
   identifier: string;
   password: string;
-}
-
-export interface typeLocation {
-  _id: string;
-  area: string;
-  status: "tersedia" | "tidak_tersedia";
 }
 
 export interface typeMembership {
@@ -72,7 +54,7 @@ export interface DashboardMetrics {
 }
 
 export interface UseDashboardReturn {
-  locations: typeLocation[];
+  locations: Location[];
   membership: MembershipPlan[];
   client: Client[];
   isLoading: boolean;

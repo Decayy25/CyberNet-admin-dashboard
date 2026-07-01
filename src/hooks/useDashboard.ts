@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { MembershipPlan, typeLocation, DashboardMetrics, UseDashboardReturn } from "@/types/UI";
+import { MembershipPlan, DashboardMetrics, UseDashboardReturn } from "@/types/UI";
 import { Client } from "@/types";
+import { Location } from "@/types/location";
 import membershipService from "@/services/membership.service";
 import locationService from "@/services/location.service";
 import clientService from "@/services/client.service";
 
 
 export const useDashboard = (): UseDashboardReturn => {
-  const [locations, setLocations] = useState<typeLocation[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [membership, setMembership] = useState<MembershipPlan[]>([]);
   const [client, setClient] = useState<Client[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);

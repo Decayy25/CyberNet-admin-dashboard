@@ -59,12 +59,7 @@ export type TypeEmail = {
   message: string;
 };
 
-// Location & Membership Types
-export type TypeLocation = {
-  area: string;
-  status: "tersedia" | "tidak_tersedia";
-};
-
+// Membership Types
 export type TypeMembership = {
   paket: string;
   price: number;

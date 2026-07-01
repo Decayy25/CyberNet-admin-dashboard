@@ -1,10 +1,10 @@
 import { Edit2, Trash2 } from "lucide-react";
-import { LocationArea } from "@/types/UI";
+import { Location } from "@/types/location";
 
 interface LocationTableProps {
-  location: LocationArea[];
+  location: Location[];
   isLoading: boolean;
-  onEdit: (loc: LocationArea) => void;
+  onEdit: (loc: Location) => void;
   onDelete: (id: string) => void;
 }
 

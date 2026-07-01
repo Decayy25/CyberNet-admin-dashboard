@@ -1,12 +1,7 @@
 import { BayesClassifier } from "@/utils/bayes-classifier";
 import { getRegion } from "@/utils/database";
 import LocationController from "@/controllers/admin-location.controller";
-
-interface LocationDoc {
-  _id?: string;
-  area: string;
-  status: string;
-}
+import { LocationDocument } from "@/types/location";
 
 interface PredictionResponse {
   area?: string;
@@ -63,12 +58,12 @@ const calculateSimilarity = (str1: string, str2: string): number => {
 
 const findSimilarArea = (
   input: string,
-  areas: LocationDoc[],
+  areas: LocationDocument[],
   threshold: number = 0.7,
-): LocationDoc | null => {
+): LocationDocument | null => {
   const normalizedInput = cleanTextSpecial(input);
 
-  let bestMatch: LocationDoc | null = null;
+  let bestMatch: LocationDocument | null = null;
   let bestScore = 0;
 
   areas.forEach((area) => {
@@ -99,7 +94,7 @@ const predictAvailability = async (body: {
 
     const dataWilayah = (await region
       .find({})
-      .toArray()) as unknown as LocationDoc[];
+      .toArray()) as unknown as LocationDocument[];
 
     if (!dataWilayah || dataWilayah.length === 0) {
       return { status: "Belum ada data wilayah di database untuk dipelajari" };
@@ -110,7 +105,7 @@ const predictAvailability = async (body: {
       (d) => d.area.toLowerCase().trim() === normalizedInput,
     );
 
-    let fuzzyMatchedArea: LocationDoc | null = null;
+    let fuzzyMatchedArea: LocationDocument | null = null;
     if (!isKnownArea) {
       fuzzyMatchedArea = findSimilarArea(area, dataWilayah, 0.7);
       if (fuzzyMatchedArea) {

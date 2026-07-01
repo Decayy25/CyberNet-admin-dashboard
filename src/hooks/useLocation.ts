@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { LocationAreaHook } from "@/types/UI";
+import { Location, LocationStatus } from "@/types/location";
 import locationService from "@/services/location.service";
 import { useRouter } from "next/router";
 
@@ -7,7 +7,7 @@ const useLocation = () => {
   const router = useRouter();
   const currentSearch =
     typeof router.query.search === "string" ? router.query.search : "";
-  const [locations, setLocations] = useState<LocationAreaHook[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // State UI (Modal & Form)
@@ -16,7 +16,7 @@ const useLocation = () => {
   const [selectedId, setSelectedId] = useState<string>("");
   const [areaInput, setAreaInput] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>(currentSearch);
-  const [statusInput, setStatusInput] = useState<string>("tersedia");
+  const [statusInput, setStatusInput] = useState<LocationStatus>("tersedia");
   const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchLocations = useCallback(async () => {
@@ -93,7 +93,7 @@ const useLocation = () => {
   const handleSaveLocation = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const rawPayload: LocationAreaHook = {
+    const rawPayload: Location = {
       ...(isEditMode && { _id: selectedId }),
       area: areaInput,
       status: statusInput,
@@ -134,7 +134,7 @@ const useLocation = () => {
     setIsModalOpen(true);
   };
 
-  const openEditModal = (loc: LocationAreaHook) => {
+  const openEditModal = (loc: Location) => {
     setIsEditMode(true);
     setSelectedId(loc._id || "");
     setAreaInput(loc.area);

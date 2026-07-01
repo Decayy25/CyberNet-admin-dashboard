@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { LocationStatus } from "@/types/location";
 import LocationTable from "@/components/views/LocationTable";
 import PageHead from "@/components/common/PageHead";
 import useLocation from "@/hooks/useLocation";
@@ -99,7 +100,9 @@ const LocationDashboard = (): React.JSX.Element => {
                       </label>
                       <select
                         value={statusInput}
-                        onChange={(e) => setStatusInput(e.target.value)}
+                        onChange={(e) =>
+                          setStatusInput(e.target.value as LocationStatus)
+                        }
                         className="w-full bg-[#1F2937]/60 border border-gray-800 px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-white transition-colors"
                       >
                         <option value="tersedia">Tersedia</option>
