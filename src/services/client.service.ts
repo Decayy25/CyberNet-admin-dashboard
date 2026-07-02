@@ -5,7 +5,7 @@ import { Client } from "@/types";
 const clientService = {
   getClient: (params?: string) => {
     const query = params ? `?${params}` : "";
-    return instanceWithCredential.get(`${endpoint.CLIENT}${query}`);
+    return instanceWithCredential.get(`${endpoint.CLIENT}${query}`)
   },
   addClient: (payload: Client) => instance.post(`${endpoint.CLIENT}`, payload),
   updateClient: (payload: Client, id: string) =>
