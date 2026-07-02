@@ -37,9 +37,9 @@ const LocationTable = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-800/60 text-sm text-gray-300">
-            {location.map((loc) => (
+            {location.map((loc, idx) => (
               <tr
-                key={loc._id}
+                key={idx}
                 className="hover:bg-[#1F2937]/20 transition-colors"
               >
                 <td className="px-6 py-4 text-xs font-mono text-gray-500">
