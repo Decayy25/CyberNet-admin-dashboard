@@ -1,7 +1,7 @@
-import { authOptions } from "@/libs/middleware/auth";
-import getServerSession from "next-auth";
 import MembershipController from "@/controllers/admin-membership.controller";
+import { NEXTAUTH_SECRET } from "@/utils/environment";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getToken } from "next-auth/jwt";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -14,10 +14,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     case "POST": {
-      const session =  await getServerSession(req,res, authOptions);
+      const session = await getToken({ req, secret: NEXTAUTH_SECRET})
 
-      if(!session) {
-         return res.status(401).json({
+      if (!session) {
+        return res.status(401).json({
           success: false,
           data: null,
           message: "cie mau nambahin data membership tapi gk ada token 😂",

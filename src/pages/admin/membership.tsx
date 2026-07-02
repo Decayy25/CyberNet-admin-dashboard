@@ -49,11 +49,6 @@ const MembershipDashboard = (): React.JSX.Element => {
   const handleSaveWithRefresh = async () => {
     try {
       await handleSaveMembership();
-      alert(
-        isEditMode
-          ? "Paket berhasil diperbarui!"
-          : "Paket berhasil ditambahkan!",
-      );
       closeModal();
       await fetchMembership();
     } catch (error) {

@@ -1,4 +1,4 @@
-import instance from "@/config/axios";
+import { instance} from "@/config/axios";
 import { ILogin } from "@/types/Auth";
 import endpoint from "./endpoint.constant";
 

@@ -1,4 +1,4 @@
-import instance from "@/config/axios";
+import { instance, instanceWithCredential } from "@/config/axios";
 import endpoint from "./endpoint.constant";
 import { LocationInput } from "@/types/location";
 
@@ -13,9 +13,9 @@ const locationService = {
     instance.post(`${endpoint.LOCATION}`, payload),
 
   updateLocation: (payload: LocationInput, id: string) =>
-    instance.put(`${endpoint.LOCATION}/${id}`, payload),
+    instanceWithCredential.put(`${endpoint.LOCATION}/${id}`, payload),
 
-  removeLocation: (id: string) => instance.delete(`${endpoint.LOCATION}/${id}`),
+  removeLocation: (id: string) => instanceWithCredential.delete(`${endpoint.LOCATION}/${id}`),
   predictLocation: (area: string) =>
     instance.post(`${endpoint.LOCATION}/predict`, { area }),
 };

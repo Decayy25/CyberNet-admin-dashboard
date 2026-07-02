@@ -1,4 +1,4 @@
-import instance from "@/config/axios";
+import { instance, instanceWithCredential} from "@/config/axios";
 import endpoint from "./endpoint.constant";
 import { typeMembership } from "@/types";
 
@@ -10,11 +10,11 @@ const membershipService = {
   getMembershipById: (id: string) =>
     instance.get(`${endpoint.MEMBERSHIP}/${id}`),
   addMembership: (payload: typeMembership) =>
-    instance.post(`${endpoint.MEMBERSHIP}`, payload),
+    instanceWithCredential.post(`${endpoint.MEMBERSHIP}`, payload),
   updateMembership: (payload: typeMembership, id: string) =>
-    instance.put(`${endpoint.MEMBERSHIP}/${id}`, payload),
+    instanceWithCredential.put(`${endpoint.MEMBERSHIP}/${id}`, payload),
   deleteMembership: (id: string) =>
-    instance.delete(`${endpoint.MEMBERSHIP}/${id}`),
+    instanceWithCredential.delete(`${endpoint.MEMBERSHIP}/${id}`),
 };
 
 export default membershipService;

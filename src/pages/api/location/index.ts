@@ -1,12 +1,10 @@
-import { authOptions } from "@/libs/middleware/auth";
 import type { NextApiRequest, NextApiResponse } from "next";
 import LocationController from "@/controllers/admin-location.controller";
-import { getServerSession } from "next-auth";
 
-export default async function handler(
+const handler = async(
   req: NextApiRequest,
   res: NextApiResponse,
-) {
+) => {
   switch (req.method) {
     case "GET": {
       const searchQuery =
@@ -29,3 +27,5 @@ export default async function handler(
       });
   }
 }
+
+export default handler;

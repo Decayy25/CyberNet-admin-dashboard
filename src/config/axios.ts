@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { getSession } from "next-auth/react";
 import type { Session } from "next-auth";
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
@@ -10,7 +10,17 @@ const instance = axios.create({
   timeout: 60 * 1000,
 });
 
-instance.interceptors.request.use(
+
+export const instanceWithCredential = axios.create({
+  withCredentials: true,
+    baseURL: "/api",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  timeout: 60 * 1000,
+});
+
+instanceWithCredential.interceptors.request.use(
   async (request) => {
     const session: Session | null = await getSession();
 
@@ -23,7 +33,7 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-instance.interceptors.response.use(
+instanceWithCredential.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as any;
@@ -54,4 +64,5 @@ instance.interceptors.response.use(
   },
 );
 
-export default instance;
+
+
