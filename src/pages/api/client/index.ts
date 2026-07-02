@@ -24,6 +24,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     case "POST": {
+      const session = await getServerSession(req, res, authOptions);
+
+      if (!session) {
+        return res.status(401).json({
+          success: false,
+          data: null,
+          message: "cie mau nambahin data client tapi gk ada token 😂",
+        });
+      }
       const result = await ClientController.addClient(req.body);
 
       return res.status(200).json(result);

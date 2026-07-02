@@ -1,5 +1,7 @@
+import { authOptions } from "./../auth/[...nextauth]";
 import type { NextApiRequest, NextApiResponse } from "next";
 import LocationController from "@/controllers/admin-location.controller";
+import { getServerSession } from "next-auth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,6 +17,17 @@ export default async function handler(
     }
 
     case "POST": {
+      const session =  await getServerSession(req,res, authOptions);
+
+      if(!session) {
+         return res.status(401).json({
+          success: false,
+          data: null,
+          message: "cie mau nambahin data lokasi tapi gk ada token 😂",
+        });
+      }
+
+      
       const result = await LocationController.addLocation(req.body);
 
       return res.status(201).json(result);
