@@ -17,17 +17,6 @@ export default async function handler(
     }
 
     case "POST": {
-      const session =  await getServerSession(req,res, authOptions);
-
-      if(!session) {
-         return res.status(401).json({
-          success: false,
-          data: null,
-          message: "cie mau nambahin data lokasi tapi gk ada token 😂",
-        });
-      }
-
-      
       const result = await LocationController.addLocation(req.body);
 
       return res.status(201).json(result);

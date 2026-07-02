@@ -1,4 +1,4 @@
-import getServerSession  from "next-auth";
+import getServerSession from "next-auth";
 import LocationController from "@/controllers/admin-location.controller";
 import { NextApiRequest, NextApiResponse } from "next";
 import { authOptions } from "@/libs/middleware/auth";
@@ -6,19 +6,19 @@ import { authOptions } from "@/libs/middleware/auth";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
 
-  if(typeof id !== "string") {
+  if (typeof id !== "string") {
     return res.status(400).json({
       success: false,
-      message: "ID tidak valid"
-    })
+      message: "ID tidak valid",
+    });
   }
 
   switch (req.method) {
     case "PUT": {
-      const session =  await getServerSession(req,res, authOptions);
+      const session = await getServerSession(req, res, authOptions);
 
-      if(!session) {
-         return res.status(401).json({
+      if (!session) {
+        return res.status(401).json({
           success: false,
           data: null,
           message: "cie mau edit data lokasi tapi gk ada token 😂",
@@ -31,10 +31,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     case "DELETE": {
-      const session =  await getServerSession(req,res, authOptions);
+      const session = await getServerSession(req, res, authOptions);
 
-      if(!session) {
-         return res.status(401).json({
+      if (!session) {
+        return res.status(401).json({
           success: false,
           data: null,
           message: "cie mau ngehapus data lokasi tapi gk ada token 😂",

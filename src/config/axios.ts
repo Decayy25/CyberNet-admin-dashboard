@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { getSession } from "next-auth/react";
-import type { Session } from "next-auth"; // ✅ Pakai Session langsung, bukan SessionExtended
+import type { Session } from "next-auth";
 
 const instance = axios.create({
   baseURL: "/api",

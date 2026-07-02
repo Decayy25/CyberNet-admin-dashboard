@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
          return res.status(401).json({
           success: false,
           data: null,
-          message: "cie mau nambahin data lokasi tapi gk ada token 😂",
+          message: "cie mau nambahin data membership tapi gk ada token 😂",
         });
       }
       const result = await MembershipController.addMembership(req.body);
