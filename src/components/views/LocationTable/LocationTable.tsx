@@ -1,5 +1,6 @@
 import { Edit2, Trash2 } from "lucide-react";
 import { LocationDocument } from "@/types/location";
+import { getLocationStatusLabel } from "@/constant/location.constant";
 
 interface LocationTableProps {
   location: LocationDocument[];
@@ -50,7 +51,7 @@ const LocationTable = ({
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${loc.status === "tersedia" ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}
                   >
-                    {loc.status}
+                    {getLocationStatusLabel(loc.status)}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right space-x-2">

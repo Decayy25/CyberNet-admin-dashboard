@@ -3,6 +3,7 @@ import { getRegion } from "@/utils/database";
 import { locationShema } from "@/models/location.models";
 import { ObjectId } from "mongodb";
 import { LocationInput } from "@/types/location";
+import { isValidLocationStatus } from "@/constant/location.constant";
 import {
   checkExactDuplicate,
   checkFuzzyDuplicate,
@@ -20,9 +21,21 @@ const LocationController = {
         const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const regex = new RegExp(escapedKeyword, "i");
 
-        filter = {
-          $or: [{ area: regex }, { areaSearchKey: regex }, { status: regex }],
-        };
+        const statusMatch = keyword.toLowerCase();
+
+        if (isValidLocationStatus(statusMatch)) {
+          filter = {
+            $or: [
+              { area: regex },
+              { areaSearchKey: regex },
+              { status: statusMatch },
+            ],
+          };
+        } else {
+          filter = {
+            $or: [{ area: regex }, { areaSearchKey: regex }],
+          };
+        }
       }
 
       const result = await region.find(filter).toArray();

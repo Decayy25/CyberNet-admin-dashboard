@@ -1,7 +1,5 @@
 import * as Yup from "yup";
-import { LocationStatus } from "@/types/location";
-
-const LOCATION_STATUS_VALUES: LocationStatus[] = ["tersedia", "tidak_tersedia"];
+import { LOCATION_STATUS_VALUES } from "@/constant/location.constant";
 
 export const locationShema = Yup.object({
   area: Yup.string()
@@ -9,7 +7,7 @@ export const locationShema = Yup.object({
     .default("Curug cinulang"),
   status: Yup.string()
     .required("status wajib diisi")
-    .oneOf(LOCATION_STATUS_VALUES, "status tidak valid")
+    .oneOf(LOCATION_STATUS_VALUES as any, "status tidak valid")
     .default("tidak_tersedia"),
 });
 

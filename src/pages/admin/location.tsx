@@ -1,5 +1,9 @@
 import { Fragment } from "react";
 import { LocationStatus } from "@/types/location";
+import {
+  LOCATION_STATUS_VALUES,
+  LOCATION_STATUS_LABELS,
+} from "@/constant/location.constant";
 import LocationTable from "@/components/views/LocationTable";
 import PageHead from "@/components/common/PageHead";
 import useLocation from "@/hooks/useLocation";
@@ -105,8 +109,11 @@ const LocationDashboard = (): React.JSX.Element => {
                         }
                         className="w-full bg-[#1F2937]/60 border border-gray-800 px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-white transition-colors"
                       >
-                        <option value="tersedia">Tersedia</option>
-                        <option value="tidak_tersedia">Tidak Tersedia</option>
+                        {LOCATION_STATUS_VALUES.map((status) => (
+                          <option key={status} value={status}>
+                            {LOCATION_STATUS_LABELS[status]}
+                          </option>
+                        ))}
                       </select>
                     </div>
 
