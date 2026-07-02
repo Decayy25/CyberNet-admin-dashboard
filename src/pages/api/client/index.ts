@@ -1,9 +1,21 @@
+import { authOptions } from "./../auth/[...nextauth]";
 import ClientController from "@/controllers/admin-client.controller";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
+      const session = await getServerSession(req, res, authOptions);
+
+      if (!session) {
+        return res.status(401).json({
+          success: false,
+          data: null,
+          message: "cie mau ngambil data user 😂",
+        });
+      }
+
       const searchQuery =
         typeof req.query.search === "string" ? req.query.search : undefined;
       const result = await ClientController.getClient(searchQuery);

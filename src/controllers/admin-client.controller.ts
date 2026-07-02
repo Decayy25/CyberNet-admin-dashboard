@@ -6,50 +6,78 @@ import { TypeContactForm } from "@/types/package";
 
 const ClientController = {
   async getClient(query?: string) {
-    try {
-      const clientMember = await getClientMember();
-      const keyword = query?.trim();
+  try {
+    const clientMember = await getClientMember();
 
-      let filter = {};
+    const trimmed = query?.trim();
 
-      if(keyword) {
-        const escapekeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const regex = new RegExp(escapekeyword, "i");
-
-        filter = {
-          $or: [{fullName: regex}, {email: regex}, {phoneNumber: regex}, {address: regex}, {packageId: regex}],
-        };
-      }
-
-      const result = await clientMember.find(filter).toArray();
-
-      if(!result || result.length === 0) {
-        return {
-          status: 200,
-          success: true,
-          message: "Belum ada data client",
-          data: [],
-        };
-      }
-
+    if (trimmed && trimmed.length > 50) {
       return {
-        status: 200,
-        success: true,
-        message: "Berhasil mengambil client",
-        data: result,
-      };
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Gagal mengambil client";
-
-      return {
-        status: 200,
-        succes: false,
-        message: errorMessage,
+        status: 400,
+        success: false,
+        message: "Keyword terlalu panjang",
         data: null,
       };
     }
-  },
+
+    const keyword = trimmed ? trimmed.slice(0, 50) : "";
+
+    let filter = {};
+
+    if (keyword) {
+      const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escapedKeyword, "i");
+
+      filter = {
+        $or: [
+          { fullName: regex },
+          { email: regex },
+          { phoneNumber: regex },
+          { packageId: regex },
+        ],
+      };
+    }
+
+    const result = await clientMember
+      .find(filter, {
+        projection: {
+          fullName: 1,
+          email: 1,
+          phoneNumber: 1,
+          address: 1,
+          packageId: 1,
+          createdAt: 1,
+        },
+      })
+      .toArray();
+
+    if (result.length === 0) {
+      return {
+        status: 200,
+        success: true,
+        message: "Belum ada data client",
+        data: [],
+      };
+    }
+
+    return {
+      status: 200,
+      success: true,
+      message: "Berhasil mengambil client",
+      data: result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Gagal mengambil client",
+      data: null,
+    };
+  }
+},
 
   async getClientByFullName(fullName: string) {
     try {
