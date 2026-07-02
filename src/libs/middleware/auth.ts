@@ -49,7 +49,7 @@ export const verifyToken = (req: NextApiRequest): AuthPayload | null => {
  */
 export const withAuth = (handler: any) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    if (["HEAD", "OPTIONS"].includes(req.method!)) {
+    if (["GET","HEAD", "OPTIONS"].includes(req.method!)) {
       return handler(req, res);
     }
 
