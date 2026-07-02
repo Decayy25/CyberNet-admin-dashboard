@@ -1,7 +1,7 @@
 import getServerSession  from "next-auth";
 import LocationController from "@/controllers/admin-location.controller";
 import { NextApiRequest, NextApiResponse } from "next";
-import { authOptions } from "./../auth/[...nextauth]";
+import { authOptions } from "@/libs/middleware/auth";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;

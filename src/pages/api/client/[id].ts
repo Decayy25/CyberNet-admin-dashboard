@@ -1,4 +1,4 @@
-import { authOptions } from "./../auth/[...nextauth]";
+import { authOptions } from "@/libs/middleware/auth";
 import getServerSession from "next-auth";
 import ClientController from "@/controllers/admin-client.controller";
 import { NextApiRequest, NextApiResponse } from "next";
