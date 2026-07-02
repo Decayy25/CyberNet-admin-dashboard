@@ -1,4 +1,4 @@
-import { Location } from "@/types/location";
+import { LocationDocument } from "@/types/location";
 
 export interface MembershipPlan {
   _id: string;
@@ -54,7 +54,7 @@ export interface DashboardMetrics {
 }
 
 export interface UseDashboardReturn {
-  locations: Location[];
+  locations: LocationDocument[];
   membership: MembershipPlan[];
   client: Client[];
   isLoading: boolean;

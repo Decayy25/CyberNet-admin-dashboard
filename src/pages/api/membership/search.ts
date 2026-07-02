@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const query = typeof req.query.q === "string" ? req.query.q : "";
-  const result = await MembershipController.getMembershipBySlug(query);
+  const result = await MembershipController.getMembership(query);
 
   return res.status(200).json(result);
 };

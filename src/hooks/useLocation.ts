@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Location, LocationStatus } from "@/types/location";
+import { Location, LocationDocument, LocationStatus } from "@/types/location";
 import locationService from "@/services/location.service";
 import { useRouter } from "next/router";
 
@@ -7,7 +7,7 @@ const useLocation = () => {
   const router = useRouter();
   const currentSearch =
     typeof router.query.search === "string" ? router.query.search : "";
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [locations, setLocations] = useState<LocationDocument[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // State UI (Modal & Form)
