@@ -1,9 +1,9 @@
 import { NextAuthOptions } from "next-auth";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt"; // Gunakan getToken bawaan NextAuth
+import { getToken } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, NEXTAUTH_URL } from "@/utils/environment";
+import { JWT_SECRET, NEXTAUTH_SECRET, NEXTAUTH_URL } from "@/utils/environment";
 import AdminController from "@/controllers/admin-auth.controller";
 import { ILogin, IAdmin, ApiResponse } from "@/types/Auth";
 
@@ -17,7 +17,6 @@ export interface AuthPayload {
 }
 
 export const authOptions: NextAuthOptions = {
-  // ... (Bagian authOptions tidak ada yang salah, biarkan persis seperti aslinya)
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -78,13 +77,8 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
 };
 
-
-/**
- * Middleware untuk protect route dengan autentikasi (HYBRID METHOD)
- */
 export const withAuth = (handler: any) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    // Lewati preflight dan pengecekan head
     if (["HEAD", "OPTIONS"].includes(req.method!)) {
       return handler(req, res);
     }
@@ -92,33 +86,34 @@ export const withAuth = (handler: any) => {
     try {
       let userPayload: any = null;
 
-      // 1. CARA PERTAMA: Cek Header Authorization (Seperti kode asli Anda)
       const authHeader = req.headers.authorization;
       if (authHeader) {
         const token = authHeader.startsWith("Bearer ")
           ? authHeader.slice(7)
           : authHeader;
         try {
-          // Decode menggunakan secret JWT kustom Anda
           userPayload = jwt.verify(
             token,
-            process.env.JWT_SECRET || "default-secret"
+            process.env.JWT_SECRET || "default-secret",
           );
-        } catch (e) {
-          // Jika header gagal divalidasi, biarkan lanjut ke Cara Kedua
+        } catch (error) {
+          return res.status(401).json({
+            status: 401,
+            success: false,
+            message: "Token tidak ditemukan, tidak valid, atau sesi berakhir",
+            data: null,
+            error
+          });
         }
       }
 
-      // 2. CARA KEDUA: Jika tidak ada di header, baca dari Cookie (NextAuth)
       if (!userPayload) {
         userPayload = await getToken({
           req,
-          // PENTING: Gunakan NEXTAUTH_SECRET sesuai dengan yang ada di src/middleware.ts Anda
-          secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET,
+          secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET || NEXTAUTH_SECRET || NEXTAUTH_SECRET,
         });
       }
 
-      // Jika kedua cara di atas gagal, tolak request
       if (!userPayload) {
         return res.status(401).json({
           status: 401,
@@ -128,7 +123,6 @@ export const withAuth = (handler: any) => {
         });
       }
 
-      // Attach user ke request object agar bisa dibaca oleh API Handler
       (req as any).user = userPayload;
 
       return handler(req, res);
@@ -159,9 +153,6 @@ export const withAdminAuth = (handler: any) => {
   });
 };
 
-/**
- * Middleware untuk CORS
- */
 export const withCORS = (handler: any) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const allowedOrigin =
