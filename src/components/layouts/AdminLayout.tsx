@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
-import Sidebar from "@/components/common/Sidebar";
-import Header from "@/components/common/Header";
+import Sidebar from "@/components/common/Admin/AdminSidebar";
+import Header from "@/components/common/Admin/AdminHeader";
 
 interface AdminLayoutProps {
   children: ReactElement;
