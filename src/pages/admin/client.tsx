@@ -63,7 +63,6 @@ const ClientPage = (): React.JSX.Element => {
               </div>
             </div>
 
-            {/* CLIENT TABLE */}
             <ClientTable
               client={client}
               isLoading={isLoading}
@@ -71,7 +70,6 @@ const ClientPage = (): React.JSX.Element => {
               onDelete={handleDeleteClient}
             />
 
-            {/*  CLIENT MODAL */}
             {isModalOpen && (
               <ClientModal
                 isOpen={isModalOpen}
