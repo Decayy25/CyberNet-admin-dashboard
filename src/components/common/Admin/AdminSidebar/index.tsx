@@ -28,7 +28,7 @@ const NavItem = ({ href, icon, label, isActive }: NavItemProps) => {
   );
 };
 
-export default function Sidebar(): React.JSX.Element {
+const AdminSidebar = (): React.JSX.Element => {
   const router = useRouter();
   const currentPath = router.pathname;
   const isActive = (path: string) => currentPath === path;
@@ -120,3 +120,5 @@ export default function Sidebar(): React.JSX.Element {
     </aside>
   );
 }
+
+export default AdminSidebar;

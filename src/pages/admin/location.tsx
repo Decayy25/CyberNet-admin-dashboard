@@ -8,8 +8,8 @@ import LocationTable from "@/components/views/LocationTable";
 import PageHead from "@/components/common/PageHead";
 import useLocation from "@/hooks/useLocation";
 import Refresh from "@/components/ui/refresh";
-import Header from "@/components/common/Header";
-import Sidebar from "@/components/common/Sidebar";
+import AdminHeader from "@/components/common/Admin/AdminHeader";
+import AdminSidebar from "@/components/common/Admin/AdminSidebar";
 import SearchBar from "@/components/ui/SearchBar";
 
 const LocationDashboard = (): React.JSX.Element => {
@@ -34,10 +34,10 @@ const LocationDashboard = (): React.JSX.Element => {
 
   return (
     <Fragment>
-      <PageHead title="Location Plans | CyberNet" />
-      <Header />
+      <PageHead title="Management Location | CyberNet" />
+      <AdminHeader />
       <div className="flex min-h-screen bg-[#0B0F19] text-white">
-        <Sidebar />
+        <AdminSidebar />
         <main className="flex-1 p-8 overflow-y-auto pl-70 pt-20">
           <div className="max-w-5xl mx-auto space-y-6">
             <div className="flex justify-between items-center">

@@ -1,7 +1,7 @@
 import React from "react";
 
 
-const Header = (): React.JSX.Element => {
+const AdminHeader = (): React.JSX.Element => {
 
   return (
     <header className="fixed left-1 w-full top-0 h-16 bg-[#111827] backdrop-blur-md border-b  border-gray-800 flex items-center justify-between px-8 z-10">
@@ -24,4 +24,4 @@ const Header = (): React.JSX.Element => {
   );
 }
 
-export default Header;
+export default AdminHeader;

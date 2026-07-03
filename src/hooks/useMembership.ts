@@ -14,6 +14,7 @@ const useMembership = () => {
     typeof router.query.search === "string" ? router.query.search : "";
 
   const [membership, setMembership] = useState<MembershipPlan[]>([]);
+  const [featuresText, setFeaturesText] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -97,10 +98,18 @@ const useMembership = () => {
   const handleSaveMembership = async () => {
     try {
       setIsLoading(true);
+      const payload = {
+        ...formData,
+        features: featuresText
+          .split(",")
+          .map((f) => f.trim())
+          .filter(Boolean),
+      };
+
       if (isEditMode) {
-        await membershipService.updateMembership(formData, isEditMode);
+        await membershipService.updateMembership(payload, isEditMode);
       } else {
-        await membershipService.addMembership(formData);
+        await membershipService.addMembership(payload);
       }
       await fetchMembership();
       resetForm();
@@ -124,6 +133,31 @@ const useMembership = () => {
       throw error;
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDeleteWithConfirm = (id: string) => {
+    if (confirm("Apakah Anda yakin ingin menghapus paket ini?")) {
+      handleDeleteMembership(id)
+        .then(() => {
+          alert("Paket berhasil dihapus!");
+          fetchMembership();
+        })
+        .catch((error) => {
+          alert(
+            "Gagal menghapus paket: " + (error?.message || "Unknown error"),
+          );
+        });
+    }
+  };
+
+  const handleSaveWithRefresh = async () => {
+    try {
+      await handleSaveMembership();
+      closeModal();
+      await fetchMembership();
+    } catch (error) {
+      alert("Gagal menyimpan paket: " + (error || "Unknown error"));
     }
   };
 
@@ -168,11 +202,15 @@ const useMembership = () => {
     isModalOpen,
     formData,
     searchQuery,
+    featuresText,
+    setFeaturesText,
     fetchMembership,
     handleSearch,
+    handleSaveMembership,
+    handleSaveWithRefresh,
     handleDataChange,
     handleInputChange,
-    handleSaveMembership,
+    handleDeleteWithConfirm,
     handleDeleteMembership,
     openAddModal,
     openEditModal,

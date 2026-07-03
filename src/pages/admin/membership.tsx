@@ -1,12 +1,11 @@
-import { Fragment, useEffect } from "react";
+import { Fragment} from "react";
 import useMembership from "@/hooks/useMembership";
 import MembershipTable from "@/components/views/MembershipTable";
 import PageHead from "@/components/common/PageHead";
 import Refresh from "@/components/ui/refresh";
 import SearchBar from "@/components/ui/SearchBar";
-import Header from "@/components/common/Header";
-import Sidebar from "@/components/common/Sidebar";
-
+import AdminHeader from "@/components/common/Admin/AdminHeader";
+import AdminSidebar from "@/components/common/Admin/AdminSidebar";
 
 const MembershipDashboard = (): React.JSX.Element => {
   const {
@@ -16,52 +15,24 @@ const MembershipDashboard = (): React.JSX.Element => {
     isEditMode,
     formData,
     searchQuery,
-    fetchMembership,
+    featuresText,
+    setFeaturesText,
     handleSearch,
     handleDataChange,
     handleInputChange,
-    handleSaveMembership,
-    handleDeleteMembership,
+    handleDeleteWithConfirm,
+    handleSaveWithRefresh,
     openAddModal,
     openEditModal,
     closeModal,
   } = useMembership();
 
-  useEffect(() => {
-    fetchMembership();
-  }, [fetchMembership]);
-
-  const handleDeleteWithConfirm = (id: string) => {
-    if (confirm("Apakah Anda yakin ingin menghapus paket ini?")) {
-      handleDeleteMembership(id)
-        .then(() => {
-          alert("Paket berhasil dihapus!");
-          fetchMembership();
-        })
-        .catch((error) => {
-          alert(
-            "Gagal menghapus paket: " + (error?.message || "Unknown error"),
-          );
-        });
-    }
-  };
-
-  const handleSaveWithRefresh = async () => {
-    try {
-      await handleSaveMembership();
-      closeModal();
-      await fetchMembership();
-    } catch (error) {
-      alert("Gagal menyimpan paket: " + (error || "Unknown error"));
-    }
-  };
-
   return (
     <Fragment>
-      <PageHead title="Membership Plans | CyberNet" />
-      <Header />
+      <PageHead title="Management Membership | CyberNet" />
+      <AdminHeader />
       <div className="flex min-h-screen bg-[#0B0F19] text-white">
-        <Sidebar />
+        <AdminSidebar />
         <main className="flex-1 p-8 overflow-y-auto pl-70 pt-20">
           <div className="max-w-5xl mx-auto space-y-6">
             <div className="flex justify-between items-center">
@@ -138,14 +109,13 @@ const MembershipDashboard = (): React.JSX.Element => {
                         Harga (IDR)
                       </label>
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         value={formData.price}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "price",
-                            parseInt(e.target.value) || 0,
-                          )
-                        }
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          handleInputChange("price", value);
+                        }}
                         placeholder="Contoh: 250000"
                         className="w-full bg-[#1F2937]/60 border border-gray-800 px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-white transition-colors"
                         required
@@ -173,20 +143,8 @@ const MembershipDashboard = (): React.JSX.Element => {
                         Fitur (pisahkan dengan koma)
                       </label>
                       <textarea
-                        value={
-                          Array.isArray(formData.features)
-                            ? formData.features.join(", ")
-                            : ""
-                        }
-                        onChange={(e) =>
-                          handleInputChange(
-                            "features",
-                            e.target.value
-                              .split(",")
-                              .map((f) => f.trim())
-                              .filter((f) => f),
-                          )
-                        }
+                        value={featuresText}
+                        onChange={(e) => setFeaturesText(e.target.value)}
                         placeholder="Contoh: 50Mbps, Unlimited Data, Free Router"
                         className="w-full bg-[#1F2937]/60 border border-gray-800 px-4 py-3 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-white transition-colors h-24 resize-none"
                       />

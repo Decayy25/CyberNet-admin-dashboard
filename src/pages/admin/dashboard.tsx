@@ -4,8 +4,8 @@ import { MapPin, CreditCard, Users, TrendingUp } from "lucide-react";
 import Refresh from "@/components/ui/refresh";
 import { useDashboard } from "@/hooks/useDashboard";
 import { KPICardProps} from "@/types/UI";
-import Header from "@/components/common/Header";
-import Sidebar from "@/components/common/Sidebar";
+import AdminHeader from "@/components/common/Admin/AdminHeader";
+import AdminSidebar from "@/components/common/Admin/AdminSidebar";
 
 
 
@@ -104,9 +104,9 @@ const DashboardPage = (): React.JSX.Element => {
   return (
     <Fragment>
       <PageHead title="Dashboard | CyberNet" />
-      <Header />
+      <AdminHeader />
       <div className="flex min-h-screen bg-[#0B0F19] text-white">
-        <Sidebar />
+        <AdminSidebar />
         <main className="flex-1 p-8 overflow-y-auto pl-70 pt-20 min-h-screen">
           <div className="max-w-7xl mx-auto space-y-6">
             <div>

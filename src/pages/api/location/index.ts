@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { NEXTAUTH_SECRET } from "@/utils/environment";
+import { getToken } from "next-auth/jwt";
 import LocationController from "@/controllers/admin-location.controller";
 
 const handler = async(
@@ -10,6 +12,16 @@ const handler = async(
       const searchQuery =
         typeof req.query.search === "string" ? req.query.search : undefined;
       const result = await LocationController.getLocation(searchQuery);
+
+      const session = await getToken({ req, secret: NEXTAUTH_SECRET});
+
+      if(!session) {
+        return res.status(401).json({
+          success: false,
+          data: null,
+          message: "cie mau liat semua data lokasi tapi gk ada token 😂",
+        });
+      }
 
       return res.status(200).json(result);
     }

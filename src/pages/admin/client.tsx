@@ -4,8 +4,8 @@ import Refresh from "@/components/ui/refresh";
 import ClientTable from "@/components/views/ClientTable";
 import ClientModal from "@/components/modals/ClientModal";
 import useClient from "@/hooks/useClient";
-import Header from "@/components/common/Header";
-import Sidebar from "@/components/common/Sidebar";
+import AdminHeader from "@/components/common/Admin/AdminHeader";
+import AdminSidebar from "@/components/common/Admin/AdminSidebar";
 import SearchBar from "@/components/ui/SearchBar";
 
 const ClientPage = (): React.JSX.Element => {
@@ -28,10 +28,10 @@ const ClientPage = (): React.JSX.Element => {
 
   return (
     <Fragment>
-      <PageHead title="Manajemen Client | CyberNet" />
-      <Header />
+      <PageHead title="Management Client | CyberNet" />
+      <AdminHeader />
       <div className="flex min-h-screen bg-[#0B0F19] text-white">
-        <Sidebar />
+        <AdminSidebar />
         <main className="flex-1 p-8 overflow-y-auto pl-70 pt-20">
           <div className="max-w-6xl mx-auto space-y-6">
             <div className="flex justify-between items-center">

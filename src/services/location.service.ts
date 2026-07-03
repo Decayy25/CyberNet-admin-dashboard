@@ -5,10 +5,8 @@ import { LocationInput } from "@/types/location";
 const locationService = {
   getLocation: (params?: string) => {
     const query = params ? `?${params}` : "";
-    return instance.get(`${endpoint.LOCATION}${query}`);
+    return instanceWithCredential.get(`${endpoint.LOCATION}${query}`);
   },
-  getLocationByArea: (area: string) =>
-    instance.get(`${endpoint.LOCATION}/area/${area}`),
   addLocation: (payload: LocationInput) =>
     instance.post(`${endpoint.LOCATION}`, payload),
 
