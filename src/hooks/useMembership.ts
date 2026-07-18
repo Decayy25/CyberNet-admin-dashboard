@@ -176,6 +176,7 @@ const useMembership = () => {
       features: plan.features || [],
       isPopular: plan.isPopular || false,
     });
+    setFeaturesText(plan.features?.join(", ") || "");
     setIsModalOpen(true);
   };
 
@@ -193,6 +194,8 @@ const useMembership = () => {
       features: [],
       isPopular: false,
     });
+
+    setFeaturesText("");
   };
 
   return {

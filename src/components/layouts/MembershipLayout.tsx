@@ -51,7 +51,7 @@ const MembershipLayout = ({ data }: MembershipLayoutProps) => {
               className="flex items-center gap-2 border-b border-gray-200 pb-3 text-gray-700"
             >
               <span className="text-green-600 font-bold"></span>
-              <span>{feature}</span>
+              <span>{`✓ ${feature}`}</span>
             </div>
           ))}
         </div>
