@@ -477,21 +477,13 @@ npm start
 
 ## 📞 Support & Contact
 
-- **Email**: support@cybernet.com
-- **WhatsApp**: +62 xxx-xxxx-xxxx
+- **Email**: ryudecay0@gmail.com
+- **WhatsApp**: +62 896-3083-1650
 - **Issues**: GitHub Issues
 
 ## 📄 License
 
 MIT License - Bebas digunakan untuk keperluan komersial maupun non-komersial
-
-## 👥 Contributors
-
-- **Founder & Lead Developer**: CyberNet Team
-- **UI/UX Designer**: Design Team
-- **Database Architecture**: Database Team
-
----
 
 ## 📝 Changelog
 
@@ -511,5 +503,5 @@ MIT License - Bebas digunakan untuk keperluan komersial maupun non-komersial
 
 ---
 
-**Last Updated**: June 2026
+**Last Updated**: July 2026
 **Project Status**: ✅ Production Ready
