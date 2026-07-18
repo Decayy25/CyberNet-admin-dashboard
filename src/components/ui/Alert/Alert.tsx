@@ -43,8 +43,7 @@ const Alert = ({
   return (
     <div
       className={`border rounded-xl p-4 mt-6 ${current.container}`}
-      role="alert"
-    >
+      role="alert">
       <div className="flex justify-between items-start">
         <h3 className="font-semibold text-lg">{current.title}</h3>
 
@@ -62,13 +61,9 @@ const Alert = ({
           <strong>Status:</strong> {status}
         </p>
 
-        <p>
-          <strong>Confidence:</strong> {confidence}
-        </p>
-
         {matchedArea && (
           <p>
-            <strong>Matched Area:</strong> {matchedArea}
+            <strong>Area yang Benar:</strong> {matchedArea}
           </p>
         )}
       </div>
