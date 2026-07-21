@@ -105,7 +105,7 @@ const RegistrationClientForm = (): React.JSX.Element => {
   };
 
   return (
-    <section id="daftar" className="w-full max-w-4xl mx-auto px-4 py-8">
+    <section id="daftar" className="w-full max-w-4xl mx-auto px-2 py-8" style={{ scrollMarginTop: "85px" }}>
       <div className="bg-white rounded-3xl shadow-lg p-8 md:p-12">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 text-center">
           Pendaftaran Pelanggan Baru

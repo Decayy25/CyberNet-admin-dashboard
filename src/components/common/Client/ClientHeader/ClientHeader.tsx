@@ -1,13 +1,14 @@
+import Image from "next/image";
 import { Fragment } from "react/jsx-runtime";
 
 const ClientHeader = () => {
   return (
     <Fragment>
       <header className="block">
-        <div className="top-header relative px-0 py-10">
-          <div className="w-1/4 mx-10 flex gap-x-20">
-            <div className="mr-200"></div>
-            <img src="/cybernet.png" alt="Logo" />
+        <div className="top-header relative py-3">
+          <div className="mx-10 flex gap-x-20">
+            <div className="mr-230"></div>
+            <Image src="/cybernet.png" alt="Logo" width={310} height={310} />
           </div>
         </div>
       </header>

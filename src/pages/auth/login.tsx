@@ -3,6 +3,7 @@ import { Controller } from "react-hook-form";
 import { HardDrive, Lock, User, Eye, EyeOff } from "lucide-react";
 import PageHead from "@/components/common/PageHead";
 import useLogin from "@/hooks/useLogin";
+import Link from "next/link";
 
 export default function LoginPage(): React.JSX.Element {
   const {
@@ -59,8 +60,7 @@ export default function LoginPage(): React.JSX.Element {
                         errors.identifier
                           ? "border-red-500/50 focus-within:border-red-500"
                           : "border-gray-800 focus-within:border-blue-500"
-                      }`}
-                  >
+                      }`}>
                     <User size={16} className="text-gray-500" />
                     <input
                       {...field}
@@ -95,8 +95,7 @@ export default function LoginPage(): React.JSX.Element {
                         errors.password
                           ? "border-red-500/50 focus-within:border-red-500"
                           : "border-gray-800 focus-within:border-blue-500"
-                      }`}
-                  >
+                      }`}>
                     <Lock size={16} className="text-gray-500" />
                     <input
                       {...field}
@@ -111,8 +110,7 @@ export default function LoginPage(): React.JSX.Element {
                       onClick={toggleVisibility}
                       tabIndex={-1}
                       disabled={isPendingLogin}
-                      className="text-gray-500 hover:text-gray-400 focus:outline-none absolute right-4 transition-colors disabled:opacity-50"
-                    >
+                      className="text-gray-500 hover:text-gray-400 focus:outline-none absolute right-4 transition-colors disabled:opacity-50">
                       {isVisible ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
@@ -129,8 +127,7 @@ export default function LoginPage(): React.JSX.Element {
             <button
               type="submit"
               disabled={isPendingLogin}
-              className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:text-gray-400 text-white font-medium py-3 rounded-xl shadow-lg shadow-blue-600/10 transition-all duration-200 flex items-center justify-center text-sm"
-            >
+              className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:text-gray-400 text-white font-medium py-3 rounded-xl shadow-lg shadow-blue-600/10 transition-all duration-200 flex items-center justify-center text-sm">
               {isPendingLogin ? (
                 <div className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
@@ -142,8 +139,14 @@ export default function LoginPage(): React.JSX.Element {
             </button>
           </form>
 
+          <div className="text-center pt-4">
+            <Link href="/" className="text-white text-sm border border-black rounded-xl p-2 bg-blue-600 font-semibold">
+              Kembali ke Halaman Utama
+            </Link>
+          </div>
+
           {/* FOOTER */}
-          <div className="text-center pt-2">
+          <div className="text-center">
             <span className="text-[10px] font-mono text-gray-600 tracking-wider uppercase">
               CyberNet System v1.0.0
             </span>

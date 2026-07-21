@@ -10,11 +10,11 @@ import Link from "next/link";
 
 const ClientNavbar = () => {
   const navItems = [
-    { href: "#", label: "Beranda", icon: House },
+    { href: "/", label: "Beranda", icon: House },
     { href: "#paket", label: "Paket Internet", icon: Wifi },
     { href: "#coverage", label: "Cek Coverage", icon: MapPin },
     { href: "#daftar", label: "Pendaftaran", icon: ClipboardList },
-    { href: "#", label: "Kontak", icon: Phone },
+    { href: "#kontak", label: "Kontak", icon: Phone },
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   ];
 

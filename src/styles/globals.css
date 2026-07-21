@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #003b8e;
+  --secondary: #0099ff;
+  --dark: #001c54;
+}
+
 .top-header {
   background: linear-gradient(
     135deg,
@@ -8,40 +18,6 @@
     #edf3ff 41%,
     #ffff 100%
   );
-}
-
-.underline-text-nav::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.4s ease;
-}
-.underline-text-nav:hover::after {
-  transform: scaleX(1);
-}
-
-.underline-text-nav::after {
-  transform: translateX(-50%);
-  width: 0;
-  transition: width 0.3s ease;
-}
-.underline-text-nav:hover::after {
-  width: 100%;
-}
-
-.underline-text-nav::after {
-  background: linear-gradient(90deg, transparent, currentColor, transparent);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-.underline-text-nav:hover::after {
-  opacity: 1;
 }
 
 /* .navbar-custom {

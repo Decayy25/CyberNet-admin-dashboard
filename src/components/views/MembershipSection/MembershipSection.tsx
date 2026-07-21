@@ -7,7 +7,7 @@ const MembershipSection = () => {
 
   if (isLoading) {
     return (
-      <section className="container mx-auto py-20">
+      <section id="paket" className="container mx-auto py-20">
         <div className="mb-10">
           <h1 className="font-bold text-3xl text-center">
             Paket Internet CYBERNET
@@ -26,7 +26,7 @@ const MembershipSection = () => {
 
   return (
     <Fragment>
-      <section className="my-10">
+      <section id="paket" className="my-10">
         <div className="mb-10">
           <h1 className="font-bold text-3xl text-center">
             Paket Internet CYBERNET
