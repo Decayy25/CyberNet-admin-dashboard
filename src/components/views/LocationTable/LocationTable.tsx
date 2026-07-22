@@ -49,7 +49,7 @@ const LocationTable = ({
                 <td className="px-6 py-4 font-medium text-white">{loc.area}</td>
                 <td className="px-6 py-4">
                   <span
-                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${loc.status === "tersedia" ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${loc.status === "tersedia" ? "bg-green-500/10 text-green-400" : loc.status === "akan_tersedia" ? "bg-blue-500/10 text-blue-400" : "bg-red-500/10 text-red-400" }`}
                   >
                     {getLocationStatusLabel(loc.status)}
                   </span>

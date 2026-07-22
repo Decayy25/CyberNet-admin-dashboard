@@ -1,22 +1,32 @@
 import { useState } from "react";
 import { AlertProps } from "@/types/UI";
 
-const Alert = ({
-  area,
-  status,
-  confidence,
-  isVerified,
-  matchedArea,
-}: AlertProps) => {
+const Alert = ({ area, status, isVerified, matchedArea }: AlertProps) => {
   const [isOpen, setIsOpen] = useState(true);
-  
 
   if (!isOpen) return null;
-  const isAvailable =
-    status.toLowerCase().includes("tersedia layanan") &&
-    !status.toLowerCase().includes("tidak tersedia");
 
-  const variant = isAvailable ? "success" : isVerified ? "info" : "warning";
+  // Tentukan variant berdasarkan status
+  // Tentukan variant berdasarkan status
+  let variant: "success" | "info" | "warning";
+
+  if (
+    status.toLowerCase().includes("belum tersedia") ||
+    status.toLowerCase().includes("tidak tersedia")
+  ) {
+    variant = "warning";
+  } else if (status.toLowerCase().includes("akan tersedia")) {
+    variant = "info";
+  } else if (
+    status.toLowerCase().includes("tersedia layanan") &&
+    !status.toLowerCase().includes("tidak tersedia")
+  ) {
+    variant = "success";
+  } else if (isVerified) {
+    variant = "info";
+  } else {
+    variant = "warning";
+  }
 
   const styles = {
     success: {
@@ -61,11 +71,13 @@ const Alert = ({
           <strong>Status:</strong> {status}
         </p>
 
-        {matchedArea && (
-          <p>
-            <strong>Area yang Benar:</strong> {matchedArea}
-          </p>
-        )}
+        {(matchedArea &&
+          status === "Tersedia Layanan Jaringan CyberNet (Verified)") ||
+          (status === "Akan Tersedia Jaringan CyberNet (Verified)" && (
+            <p>
+              <strong>Area yang Benar:</strong> {matchedArea}
+            </p>
+          ))}
       </div>
     </div>
   );

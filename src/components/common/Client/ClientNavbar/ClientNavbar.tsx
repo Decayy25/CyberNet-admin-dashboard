@@ -38,10 +38,7 @@ const ClientNavbar = () => {
                   </span>
 
                   <span
-                    className="absolute bottom-1 left-1/2 h-0.5 bg-white 
-                    w-0 -translate-x-1/2
-                    transition-all duration-300 ease-out
-                    group-hover:w-full group-hover:left-0 group-hover:translate-x-0"
+                    className="absolute bottom-1 left-1/2 h-0.5 bg-white w-0 -translate-x-1/2transition-all duration-300 ease-outgroup-hover:w-full group-hover:left-0 group-hover:translate-x-0"
                   />
                 </Link>
               </li>
